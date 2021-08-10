@@ -4,6 +4,7 @@ charset-normalizer==2.0.2
 click==8.0.1
 dnspython==2.1.0
 Flask==2.0.1
+Flask-PyMongo==2.3.0
 google-auth==1.33.0
 google-auth-oauthlib==0.4.4
 gspread==3.7.0
