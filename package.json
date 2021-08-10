@@ -5,7 +5,7 @@
   "author": "Ola Malmgren <malmgrenola@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "python3 run.py",
+    "dev": "python3 app.py",
     "deploy": "pip3 freeze --local > requirements.txt | echo 'Deploy is not setup yet'"
   }
 }
