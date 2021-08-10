@@ -243,7 +243,8 @@ Site CSS should return no errors or warnings.
 
 Site is deployed to [domain/rooster](#) using a service.
 
-...
+1. In the terminal run `yarn` - to download all dependencies
+2. `yarn deploy` - to deploy the site. Note that `requirements.txt` is created automatically using the command.
 
 ## Development
 
@@ -255,7 +256,7 @@ This project uses `yarn` to start a development server.
 4. In the terminal run `yarn` - to download all dependencies
 5. `yarn dev` - to start a dev environment.
 
-a http-server should start on port 3000 and the site is now available on `http://localhost:3000`.
+a `python3` should start using the file `run.py` serving the Flask app and the site is now available on `http://localhost:3000`.
 
 ## Credits
 

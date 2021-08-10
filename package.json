@@ -1,0 +1,11 @@
+{
+  "name": "rooster",
+  "version": "1.0.0",
+  "repository": "https://github.com/malmgrenola/rooster.git",
+  "author": "Ola Malmgren <malmgrenola@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "python3 run.py",
+    "deploy": "pip3 freeze --local > requirements.txt | echo 'Deploy is not setup yet'"
+  }
+}
