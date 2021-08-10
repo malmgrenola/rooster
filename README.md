@@ -259,6 +259,10 @@ a http-server should start on port 3000 and the site is now available on `http:/
 
 ## Credits
 
+### Template
+
+The template shop-homepage used on this site is from [Start Bootstrap](https://startbootstrap.com/template/shop-homepage)
+
 ### Media
 
 The photos used in this site were obtained from:
