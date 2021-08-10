@@ -131,3 +131,6 @@ dmypy.json
 
 # System stuff
 .DS_Store
+
+# Yarn
+/node_modules

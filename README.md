@@ -4,7 +4,7 @@ The local farm shop site that promotes their products online with the ability to
 
 Live site location:
 
-[Purple Rooster Farm Shop Website](https://malmgrenola.github.io/rooster)
+[Purple Rooster Farm Shop Website](#)
 
 ![last deployment](https://img.shields.io/github/last-commit/malmgrenola/rooster/gh-pages?label=last%20live%20site%20deployment)
 
@@ -41,10 +41,14 @@ The typical website user is interested in sourcing local farm products.
 
 The site owners goal is to promote products that is for sale in the local farm shop and administrator reservations from website users.
 
-- As an admin user, I would like to [CRUD](#https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) my products to the website so My customers can see what the farm shop currently sells.
+- As an admin user, I would like to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) my products to the website so My customers can see what the farm shop currently sells.
 - As a user, I would like to reserve goods for later pickup in the farm shop, so I know goods is available when I visit the shop on site.
 - As a user, I would like to get an email confirming my reserved goods, so I know what I reserved.
-- As an admin, I would like to [CRUD](#https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) all goods reservation so I can reserve manually, see all reservations, confirm reservations and remove reservations.
+- As an admin, I would like to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) all goods reservation so I can reserve manually, see all reservations, confirm reservations and remove reservations.
+- As a user, I would like to login to the site and see my reservations, so I can follow up on what I reserved.
+- As a admin, I would like to login to the site, so I can administrate products, reservations & users.
+- As a user, I would like to search for products, so I can quickly put items in my reservation basket.
+- As a user I can see all opening hours, so I can plan my trip schedule.
 
 Site screenshots are found in the project folder [/wireframes](wireframes).
 
@@ -55,9 +59,9 @@ Site wireframes:
 - [Query results page](wireframes/query.png) list all search results.
 - [Reservation basket page](wireframes/reservation.png) display selected items for prepared for reservation.
 - [user page](wireframes/user.png) display user details.
-- [Sign in Page](wireframes/meal.png) ability to sign in to the site.
-- [list users page](wireframes/meal.png) list all users for admin purposes
-- [list reservations page](wireframes/meal.png) list all users reservations for admin purposes
+- [Sign in Page](wireframes/signin.png) ability to sign in to the site.
+- [list reservations page](wireframes/list-reservations.png) list all users reservations for admin purposes
+- [Admin list users page](wireframes/list-users.png) list all users for admin purposes
 
 ## Features
 
@@ -65,19 +69,22 @@ The website contains a clear navigation on every page.
 The site is based on a navigational hierarchical tree structure.
 Navigation bar is responsive and will fold down to a burger menu when it wont fit the size.
 
-Navigation items:
-sign in
+**Navigation items:**
 Home page
-Categories
-search
+Products with categories
+Reservations basket
+search bar
+My page _(only signed in users)_
+Admin _(only signed in admins)_
 
 Each page includes a footer element containing information about the site and links to site social accounts and link to favourites page.
 [Footer wireframe example](wireframes/footer.png)
 
 ### Existing Features
 
-- sign in - allows user to sign in to see reservations made.
+- sign in/out - allows user to sign in to see reservations made and sign out when user would like to leave.
 - sign up - allows user to sign up for an account so user don't have to fill out the information again.
+- close account - allows user to close the account.
 - find products - allows user to find products based on queries.
 - add to reservation basket - allows user to add product to a basket while navigating on the site.
 - create reservation - send current reservation basket to the farm shop.
@@ -85,7 +92,7 @@ Each page includes a footer element containing information about the site and li
 - Administrate products - CRUD
 - Administrate reservations - CRUD
 
-#### Data storage
+#### Database structure
 
 Anonymous users are tracked with a ......
 
