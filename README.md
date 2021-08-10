@@ -248,10 +248,11 @@ Site CSS should return no errors or warnings.
 
 ## Deployment
 
-Site is deployed to [domain/rooster](#) using a service.
+Site is deployed to https://purple-rooster.herokuapp.com/ using [Heruko](https://heruko.com).
 
-1. In the terminal run `yarn` - to download all dependencies
-2. `yarn deploy` - to deploy the site. Note that `requirements.txt` is created automatically using the command.
+Heruko is connected to the Github repository with automatic deploy from the branch `main`.
+
+Every new commit triggers a deploy.
 
 ## Development
 
