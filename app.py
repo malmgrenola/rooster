@@ -29,6 +29,26 @@ def products():
 
 @app.route("/register", methods=["GET","POST"])
 def register():
+    if request.method == "POST":
+        #Check if username already exists in db
+        existing_user = mongo.db.users.find_one(
+        {"email": request.form.get("email").lower()})
+
+        if existing_user:
+            flash("Username already exists")
+            return redirect(url_for("register"))
+
+        register = {
+            "email": request.form.get("email").lower(),
+            "password": generate_password_hash(request.form.get("password"))
+        }
+        mongo.db.users.insert_one(register)
+
+        # put user in a 'session' cookie
+        session["email"] = request.form.get("email").lower()
+        flash("Registration Successful!")
+
+
     return render_template("register.html",page_title="Register")
 
 if __name__ == "__main__":

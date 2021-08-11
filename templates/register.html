@@ -14,6 +14,7 @@
       class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
     >
       <form method="POST" action="{{ url_for('register') }}">
+        <!--Email-->
         <div class="mb-3">
           <i class="fas fa-user-plus"></i
           ><label for="email" class="form-label">Email address</label>
@@ -24,11 +25,13 @@
             name="email"
             aria-describedby="emailHelp"
             autocomplete="email"
+            required
           />
           <div id="emailHelp" class="form-text">
             We'll never share your email with anyone else.
           </div>
         </div>
+        <!--Password-->
         <div class="mb-3">
           <i class="fas fa-user-lock"></i>
           <label for="password" class="form-label">Password</label>
@@ -38,9 +41,11 @@
             id="password"
             name="password"
             autocomplete="new-password"
+            required
           />
         </div>
-        <button type="submit" class="btn btn-primary">Create</button>
+        <!--Submit-->
+        <button type="submit" class="btn btn-primary">Create user</button>
       </form>
     </div>
   </div>
