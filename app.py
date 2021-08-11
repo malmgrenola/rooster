@@ -20,8 +20,8 @@ mongo = PyMongo(app)
 def index():
     return render_template("index.html",page_title="Home")
 
-@app.route("/get_products")
-def get_products():
+@app.route("/products")
+def products():
     products = mongo.db.products.find()
     print(products)
     return render_template("products.html",page_title="Products", products=products)
