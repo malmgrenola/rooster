@@ -38,7 +38,7 @@
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="/"
+        <a class="navbar-brand" href="{{ url_for('index') }}"
           >Start Bootstrap <i class="fas fa-smile"></i
         ></a>
         <button
@@ -70,7 +70,9 @@
               >
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li>
-                  <a class="dropdown-item" href="/products">All Products</a>
+                  <a class="dropdown-item" href="{{ url_for('products') }}"
+                    >All Products</a
+                  >
                 </li>
                 <li><hr class="dropdown-divider" /></li>
                 <li><a class="dropdown-item" href="#!">Popular Items</a></li>
@@ -85,26 +87,15 @@
               <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
             </button>
           </form>
+          <a class="nav-link" href="{{ url_for('register') }}">Sign up</a>
+          <a class="nav-link" href="#!">Sign in</a>
+          <a class="nav-link" href="#!">Sign out</a>
         </div>
       </div>
     </nav>
-    <!-- Header-->
-    <header class="bg-dark py-5">
-      <div class="container px-4 px-lg-5 my-5">
-        <div class="text-center text-white">
-          <h1 class="display-4 fw-bolder">Shop in style</h1>
-          <p class="lead fw-normal text-white-50 mb-0">
-            With this shop hompeage template
-          </p>
-        </div>
-      </div>
-    </header>
-    <!-- Section-->
-    <section class="py-5">
-      <div class="container px-4 px-lg-5 mt-5">
-        {% block content %} {% endblock %}
-      </div>
-    </section>
+
+    {% block content %} {% endblock %}
+
     <!-- Footer-->
     <footer class="py-5 bg-dark">
       <div class="container">

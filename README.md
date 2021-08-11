@@ -281,3 +281,4 @@ The photos used in this site were obtained from:
 ### Acknowledgements
 
 - I received inspiration from [code institute](https://codeinstitute.net/)
+- https://www.chromium.org/developers/design-documents/create-amazing-password-forms
