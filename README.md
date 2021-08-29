@@ -96,11 +96,11 @@ Each page includes a footer element containing information about the site and li
 
 [MongoDB](https://www.mongodb.com/) is used to store all data. Whtin one cluster ("Cluster0") the database "roosterDB" contain the following colletions:
 
-- [Users collection](#users_collection)
-- [Categories collection](#categories_collection)
-- [Products collection](#products_collection)
-- [Reservations collection](#reservations_collection)
-  - [Products Array of objects](#products_array_of_objects)
+- [Users collection](#users-collection)
+- [Categories collection](#categories-collection)
+- [Products collection](#products-collection)
+- [Reservations collection](#reservations-collection)
+  - [Products Array of objects](#products-array-of-objects)
 
 ##### Users collection
 
@@ -146,7 +146,7 @@ Reservation collection holds each reservation in separate records.
 | \_id                                   | ObjectId  | unique record id                              |
 | client-name                            | string    | Holds client Full name                        |
 | client-email                           | string    | Holds client email address                    |
-| [products](#products_array_of_objects) | Array     | Holds an array of product objects             |
+| [products](#products-array-of-objects) | Array     | Holds an array of product objects             |
 | order-comment                          | string    | Client order comment                          |
 | order-date-pickup                      | Timestamp | Date when client pickups order                |
 | order-date-place                       | Timestamp | Date when client placed order                 |
