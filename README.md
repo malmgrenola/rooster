@@ -96,6 +96,12 @@ Each page includes a footer element containing information about the site and li
 
 [MongoDB](https://www.mongodb.com/) is used to store all data. Whtin one cluster ("Cluster0") the database "roosterDB" contain the following colletions:
 
+- [Users collection](#users_collection)
+- [Categories collection](#categories_collection)
+- [Products collection](#products_collection)
+- [Reservations collection](#reservations_collection)
+  - [Products Array of objects](#products_array_of_objects)
+
 ##### Users collection
 
 Users collection holds client contact and access information.
