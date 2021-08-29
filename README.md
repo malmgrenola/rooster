@@ -130,7 +130,7 @@ Products collection holds information about each product.
 
 | field         | type       | description                |
 | ------------- | ---------- | -------------------------- |
-| \_id          | string     | unique record id           |
+| \_id          | ObjectId   | unique record id           |
 | name          | string     | Holds product name         |
 | description   | string     | Holds product description  |
 | price         | Decimal128 | product item price         |
