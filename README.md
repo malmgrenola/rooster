@@ -6,9 +6,7 @@ Live site location:
 
 [Purple Rooster Farm Shop Website](#)
 
-![last deployment](https://img.shields.io/github/last-commit/malmgrenola/rooster/gh-pages?label=last%20live%20site%20deployment)
-
-![badge](https://img.shields.io/w3c-validation/html?style=plastic&targetUrl=https%3A%2F%2Fmalmgrenola.github.io%2Frooster%2Findex.html)
+![badge](https://img.shields.io/w3c-validation/html?style=plastic&targetUrl=https%3A%2F%2Fpurple-rooster.herokuapp.com)
 
 Live site screenshot:
 ![Purple Rooster Farm Shop layout](wireframes/rooster-site.png)
@@ -41,7 +39,7 @@ The typical website user is interested in sourcing local farm products.
 
 The site owners goal is to promote products that is for sale in the local farm shop and administrator reservations from website users.
 
-- As an admin user, I would like to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) my products to the website so My customers can see what the farm shop currently sells.
+- As an admin user, I would like to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) my products to the website so my customers can see what the farm shop currently sells.
 - As a user, I would like to reserve goods for later pickup in the farm shop, so I know goods is available when I visit the shop on site.
 - As a user, I would like to get an email confirming my reserved goods, so I know what I reserved.
 - As an admin, I would like to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) all goods reservation so I can reserve manually, see all reservations, confirm reservations and remove reservations.
@@ -88,23 +86,81 @@ Each page includes a footer element containing information about the site and li
 - find products - allows user to find products based on queries.
 - add to reservation basket - allows user to add product to a basket while navigating on the site.
 - create reservation - send current reservation basket to the farm shop.
+  - Tracking of possible product name changes.
 - Administrate users - CRUD
 - Administrate products - CRUD
+- Administrate categories - CRUD
 - Administrate reservations - CRUD
 
-#### Database structure
+#### Database model
 
-Anonymous users are tracked with a ......
+[MongoDB](https://www.mongodb.com/) is used to store all data. Whtin one cluster ("Cluster0") the database "roosterDB" contain the following colletions:
 
-Here is an example user record ......
+##### Users collection
 
-```
-{ "no-example": "yet" }
-```
+Users collection holds client contact and access information.
+
+| field    | type     | description                |
+| -------- | -------- | -------------------------- |
+| \_id     | ObjectId | unique record id           |
+| name     | string   | Holds client Full name     |
+| email    | string   | Holds client email address |
+| password | string   | user hased password        |
+| isAdmin  | Boolean  | Gives user admin access    |
+
+##### Categories collection
+
+Categories collection holds a list of the different product categories.
+
+| field     | type     | description                 |
+| --------- | -------- | --------------------------- |
+| \_id      | ObjectId | unique record id            |
+| name      | string   | Holds client Full name      |
+| image-url | string   | Holds url to category image |
+
+##### Products collection
+
+Products collection holds information about each product.
+
+| field         | type       | description                |
+| ------------- | ---------- | -------------------------- |
+| \_id          | string     | unique record id           |
+| name          | string     | Holds product name         |
+| description   | string     | Holds product description  |
+| price         | Decimal128 | product item price         |
+| image-url     | string     | Holds url to product image |
+| categories-id | Array      | Array of categories id's   |
+
+##### Reservations collection
+
+Reservation collection holds each reservation in separate records.
+
+| field                                  | type      | description                                   |
+| -------------------------------------- | --------- | --------------------------------------------- |
+| \_id                                   | ObjectId  | unique record id                              |
+| client-name                            | string    | Holds client Full name                        |
+| client-email                           | string    | Holds client email address                    |
+| [products](#products_array_of_objects) | Array     | Holds an array of product objects             |
+| order-comment                          | string    | Client order comment                          |
+| order-date-pickup                      | Timestamp | Date when client pickups order                |
+| order-date-place                       | Timestamp | Date when client placed order                 |
+| order-date-last-progress               | Timestamp | Date when client last updated order           |
+| order-date-confirm                     | Timestamp | Date when farm shop admin confirmed the order |
+
+###### Products Array of objects
+
+Each product client would like to reserve.
+
+| field  | type       | description                                  |
+| ------ | ---------- | -------------------------------------------- |
+| id     | string     | products id reference                        |
+| name   | string     | Holds product name                           |
+| amount | Int32      | Number of items client would like to reserve |
+| price  | Decimal128 | product item price                           |
 
 #### Site content
 
-Most of the site content is provided from .....
+The sample products is provided from:
 
 #### Style Information
 
@@ -133,7 +189,7 @@ In this section, all of the languages, frameworks, libraries, and any other tool
   - Used to handle site code logic and API integrations
 - [Python+Flask](#)
   - used to render site and connect to database
-- [MongoDB](#)
+- [MongoDB](https://www.mongodb.com/)
   - Used to store all data.
 - [Bootstrap](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
   - used to make site responsive
@@ -255,6 +311,8 @@ Heruko is connected to the Github repository with automatic deploy from the bran
 Every new commit triggers a deploy.
 
 ## Development
+
+Versioning of this project uses [Github](https://github.com/)
 
 This project uses `yarn` to start a development server.
 
