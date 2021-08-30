@@ -1,0 +1,7 @@
+{% extends "base.html" %} {% block content %} {% if reservations %}
+<ul>
+  {% for reservation in reservations %}
+  <li>{{ reservation.name }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endblock %}
