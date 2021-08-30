@@ -23,10 +23,23 @@ def index():
     """
     Render index for route "/" and set page title
     """
-    return render_template("index.html",page_title="Home")
+
+    products = mongo.db.products.find({})
+    print(products[0])
 
 
-@app.route("/c")
+    return render_template("index.html", page_title="Home", products=products)
+
+
+@app.route("/s")
+def search():
+    """
+    Render index for route "/" and set page title
+    """
+    return render_template("search.html",page_title="Search")
+
+
+@app.route("/products")
 def products():
     """
     Render products for route "/products" and set page title
@@ -120,6 +133,53 @@ def register():
 
 
     return render_template("/auth/register.html",page_title="Register")
+
+
+@app.route("/signin", methods=["GET","POST"])
+def signin():
+    """
+    Render register for route "/register" and set page title.
+    If user exist function will redirect to signin page.
+    First user in DB will be admin otherwise user will be added to DB.
+    """
+    if request.method == "GURKA":
+        #Check if username already exists in db
+        existing_user = mongo.db.users.find_one(
+        {"email": request.form.get("email").lower()})
+
+        if existing_user:
+            flash("Username already exists")
+            return redirect(url_for("signin"))
+
+        register = {
+            "name": request.form.get("name"),
+            "email": request.form.get("email").lower(),
+            "isAdmin": False,
+            "password": generate_password_hash(request.form.get("password"))
+        }
+
+        #Check if it is the first user and make sure it's a administrator.
+        numberOfRecords = mongo.db.users.count_documents({})
+
+        if numberOfRecords == 0:
+            register["isAdmin"] = True
+
+        mongo.db.users.insert_one(register)
+        # put user in a 'session' cookie
+        session["email"] = request.form.get("email").lower()
+        flash("Registration Successful!")
+
+
+    return render_template("/auth/signin.html",page_title="Sign in")
+
+@app.context_processor
+def get_categories():
+    """
+    Find all categories and return them
+    """
+
+    categories = mongo.db.categories.find()
+    return dict(categories=categories)
 
 
 @app.errorhandler(404)
