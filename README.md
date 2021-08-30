@@ -69,9 +69,11 @@ Navigation bar is responsive and will fold down to a burger menu when it wont fi
 
 **Navigation items:**
 Home page
-Products with categories
-Reservations basket
+Products with category navigation
 search bar
+Reservations basket
+Sign up _(only anonymous users)_
+Sign in _(only anonymous users)_
 My page _(only signed in users)_
 Admin _(only signed in admins)_
 
