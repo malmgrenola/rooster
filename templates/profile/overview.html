@@ -1,0 +1,68 @@
+{% extends "base.html" %} {% block content %} {% if user %}
+<header class="bg-dark py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-6 fw-bolder">Overview</h1>
+    </div>
+  </div>
+</header>
+<!-- Section-->
+<section class="py-5">
+  <div class="container px-4 px-lg-5 mt-5">
+    <div
+      class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
+    >
+      <form method="POST" action="{{ url_for('profile') }}">
+        <!--Name-->
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="input"
+            class="form-control"
+            id="name"
+            name="name"
+            autocomplete="name"
+            value="{{user.name}}"
+            required
+          />
+        </div>
+        <!--Email-->
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            autocomplete="email"
+            value="{{user.email}}"
+            required
+          />
+        </div>
+
+        <!--Submit-->
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </form>
+    </div>
+    <div
+      class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
+    >
+      <h4>
+        Reservations
+      </h4>
+    </div>
+    <div
+      class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
+    >
+      <ul>
+        {% if not reservations %}
+        <li>No reservations made yet</li>
+        {% endif %} {% for reservation in reservations %}
+        <li>{{reservation}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% endif %} {% endblock %}

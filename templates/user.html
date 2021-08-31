@@ -1,5 +1,3 @@
-{% extends "base.html" %} {% block content %} {% if user %}
-<h1>Hello {{ user }}!</h1>
-{% else %}
-<h1>No user yet!</h1>
-{% endif %} {% endblock %}
+{% extends "base.html" %} {% block content %}
+<p>Hello {{ user }}!</p>
+{% endblock %}

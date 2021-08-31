@@ -6,6 +6,7 @@ from markupsafe import escape
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
+import urllib
 if os.path.exists("env.py"):
     import env
 
@@ -21,12 +22,10 @@ mongo = PyMongo(app)
 @app.route("/")
 def index():
     """
-    Render index for route "/" and set page title
+    Render index for route "/", set page title and display index products
     """
 
     products = mongo.db.products.find({})
-    print(products[0])
-
 
     return render_template("index.html", page_title="Home", products=products)
 
@@ -34,7 +33,7 @@ def index():
 @app.route("/s")
 def search():
     """
-    Render index for route "/" and set page title
+    Render search for route "/s" and set page title to query
     """
     return render_template("search.html",page_title="Search")
 
@@ -138,48 +137,126 @@ def register():
 @app.route("/signin", methods=["GET","POST"])
 def signin():
     """
-    Render register for route "/register" and set page title.
-    If user exist function will redirect to signin page.
-    First user in DB will be admin otherwise user will be added to DB.
+    Render signin for route "/signin" and set page title.
+    If user exist function will redirect to a page.
     """
-    if request.method == "GURKA":
+    if request.method == "POST":
         #Check if username already exists in db
-        existing_user = mongo.db.users.find_one(
-        {"email": request.form.get("email").lower()})
+        existing_user = mongo.db.users.find_one({"email": request.form.get("email").lower()})
 
         if existing_user:
-            flash("Username already exists")
+            # ensure hashed password matches user input
+            if check_password_hash(
+                    existing_user["password"], request.form.get("password")):
+
+                        session["user"] = request.form.get("email").lower()
+                        flash("Welcome, {}".format(existing_user["name"]))
+                        return redirect(url_for("profile"))
+            else:
+                # invalid password match
+                flash("Incorrect Username and/or Password")
+                return redirect(url_for("signin"))
+
+        else:
+            # username doesn't exist
+            flash("Incorrect Username and/or Password")
             return redirect(url_for("signin"))
-
-        register = {
-            "name": request.form.get("name"),
-            "email": request.form.get("email").lower(),
-            "isAdmin": False,
-            "password": generate_password_hash(request.form.get("password"))
-        }
-
-        #Check if it is the first user and make sure it's a administrator.
-        numberOfRecords = mongo.db.users.count_documents({})
-
-        if numberOfRecords == 0:
-            register["isAdmin"] = True
-
-        mongo.db.users.insert_one(register)
-        # put user in a 'session' cookie
-        session["email"] = request.form.get("email").lower()
-        flash("Registration Successful!")
 
 
     return render_template("/auth/signin.html",page_title="Sign in")
 
+
+@app.route("/users")
+def users():
+    """
+    Render users for route "/users" and set page title
+    """
+
+    users = mongo.db.users.find({})
+
+    return render_template("users.html",page_title="Users", users=users)
+
+
+@app.route("/profile/overview", methods=['GET','POST'])
+def profile():
+    """
+    Render user profile based on session cookie and set page title
+    Post will update user details and set new user cookie
+    """
+    user = get_user()
+
+    if not user:
+        return redirect(url_for("signin"))
+
+    if request.method == "POST":
+        existing_user = mongo.db.users.find_one({"email": user["email"]})
+
+        filter = { '_id': existing_user["_id"] }
+        newvalues = { "$set": {'name': request.form.get("name"), "email": request.form.get("email").lower()} }
+
+        mongo.db.users.update_one(filter, newvalues)
+        session["user"] = request.form.get("email").lower()
+        flash("Your new details are saved")
+
+    return render_template("/profile/overview.html",page_title="User")
+
+
+@app.route("/logout")
+def logout():
+    # remove user from session cookie
+    flash("You have been signed out")
+    session.pop("user")
+
+    return redirect(url_for("signin"))
+
+
 @app.context_processor
 def get_categories():
     """
-    Find all categories and return them
+    Find all categories and return them as dict
     """
 
     categories = mongo.db.categories.find()
     return dict(categories=categories)
+
+
+@app.context_processor
+def get_session():
+    """
+    Session information avalible on all pages
+    """
+
+    user = get_user()
+
+    return dict(user=user)
+
+
+def get_user():
+    """
+    Return avalible user information based on current cookie.
+    Ensure sensitive data is removed.
+    """
+    if not session:
+        return {}
+
+    if not "user" in session:
+        return {}
+
+    email = urllib.parse.unquote(session["user"])
+
+    if not email:
+        return {}
+
+    user = mongo.db.users.find_one({"email": email})
+
+    if not user:
+        return {}
+
+    user.pop('password', None)
+    user.pop('isAdmin', None)
+    user.pop('_id', None)
+
+    return user
 
 
 @app.errorhandler(404)
