@@ -4,9 +4,12 @@ from flask import (
     flash, redirect, session, url_for)
 from markupsafe import escape
 from flask_pymongo import PyMongo
-from bson.objectid import ObjectId
+from bson import json_util, ObjectId
+import json
 from werkzeug.security import generate_password_hash, check_password_hash
 import urllib
+from datetime import datetime
+
 if os.path.exists("env.py"):
     import env
 
@@ -19,13 +22,38 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 mongo = PyMongo(app)
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
     """
     Render index for route "/", set page title and display index products
     """
 
-    products = mongo.db.products.find({})
+    if request.method == "POST":
+        print(request.form)
+        if "product_id" in request.form:
+            product = mongo.db.products.find_one({"_id": ObjectId(request.form.get("product_id"))})
+            basket = get_basket()
+
+            index = indexOf(basket,"id",str(product["_id"]))
+            print(10,index)
+            if index >= 0:
+                # Product is already in basket, lets update the quantaty
+                basket[index]["amount"] += 1
+            else:
+                # Product missing in basket, lets add it
+                item = {
+                "id": str(product["_id"]),
+                "name": product["name"],
+                "amount": 1,
+                "price":product["price"]
+                }
+                basket.append(item)
+
+            session["basket"] = basket
+            storeBasket()
+            flash("Basket item added")
+
+    products = mongo.db.products.find()
 
     return render_template("index.html", page_title="Home", products=products)
 
@@ -44,6 +72,7 @@ def products():
     Render products for route "/products" and set page title
     """
     products = mongo.db.products.find()
+    print(10,products)
     return render_template("products.html",page_title="Products", products=products)
 
 
@@ -75,24 +104,90 @@ def category(category=None):
     return render_template("category.html",page_title="Category", category=category)
 
 
+
+@app.route("/basket", methods=["GET", "POST"])
+def basket():
+    """
+    Render basket & button handlers for basket page
+    """
+    if request.method == "POST":
+        basket = get_basket()
+
+        if "delete" in request.form:
+            # Remove product from basket
+            print("del",request.form["delete"])
+            index = indexOf(basket,"id",request.form["delete"])
+            basket.pop(index)
+            session["basket"] = basket
+            storeBasket()
+
+        elif "update" in request.form:
+            # update amount manually
+            print("update",request.form["update"])
+
+            if "input" in request.form:
+                newValue = int(request.form["input"])
+                index = indexOf(basket,"id",request.form["update"])
+                if newValue > 0:
+                    basket[index]["amount"] = newValue
+                    session["basket"] = basket
+                    storeBasket()
+
+        elif "place" in request.form:
+            # Create a reservetion with current basket
+            print("place",request.form["place"])
+            user = get_user()
+
+            reservation = {
+            "client-name": user["name"],
+            "client-email": user["email"],
+            "order_comment": "",
+            "order_date_confirm": 0,
+            "order_date_last_progress": datetime.today(),
+            "order_date_pickup": 0,
+            "order_date_place": 0,
+            "products": basket
+            }
+            id = mongo.db.reservations.insert_one(reservation).inserted_id
+
+            return redirect(url_for("reservation",reservation_id=id))
+
+        else:
+            # a post ation where the the button name is not defiened
+            print("unkown button",request.form)
+            pass
+
+    return render_template("basket.html",page_title="Basket")
+
 @app.route("/reservations")
 def reservations():
     """
     Render reservations for route "/reservations" and set page title
     """
-    reservations = mongo.db.reservations.find()
-    print(reservations)
+    if "user" in session:
+        user = session["user"]
+        user = "john@exampledomain.com"
+        reservations = mongo.db.reservations.find({"client_email": user})
+
     return render_template("reservations.html",page_title="Reservation", reservations=reservations)
 
 
 @app.route("/reservation/")
-@app.route("/reservation/<reservation>")
-def reservation(reservation=None):
+@app.route("/reservation/<reservation_id>")
+def reservation(reservation_id=0):
     """
     Render reservation for route "/reservation" and set page title
     """
-    reservation = mongo.db.reservations.find_one(reservation)
-    print(reservation)
+
+    user = get_user()
+
+    if reservation_id == 0:
+        reservation = get_basketReservation(user)
+    else:
+        reservation = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)})
+
+    print(100,reservation)
+
     return render_template("reservation.html",page_title="reservation", reservation=reservation)
 
 
@@ -150,6 +245,10 @@ def signin():
                     existing_user["password"], request.form.get("password")):
 
                         session["user"] = request.form.get("email").lower()
+                        if "basket" in existing_user:
+                            print(300,existing_user)
+                            session["basket"] = existing_user["basket"]
+                            print(301,session)
                         flash("Welcome, {}".format(existing_user["name"]))
                         return redirect(url_for("profile"))
             else:
@@ -206,30 +305,33 @@ def logout():
     # remove user from session cookie
     flash("You have been signed out")
     session.pop("user")
+    session.pop("basket")
 
     return redirect(url_for("signin"))
 
 
 @app.context_processor
-def get_categories():
-    """
-    Find all categories and return them as dict
-    """
-
-    categories = mongo.db.categories.find()
-    return dict(categories=categories)
-
-
-@app.context_processor
 def get_session():
     """
-    Session information avalible on all pages
+    Session and genaral information avalible on all pages
     """
 
     user = get_user()
+    basket = get_basket()
+    categories = mongo.db.categories.find()
 
-    return dict(user=user)
+    return dict(user=user,basket=basket,categories=categories)
 
+
+def get_basket():
+    """
+    get basket from session
+    """
+
+    if not "basket" in session:
+        session["basket"] = []
+
+    return session["basket"]
 
 def get_user():
     """
@@ -255,6 +357,7 @@ def get_user():
     user.pop('password', None)
     user.pop('isAdmin', None)
     user.pop('_id', None)
+    user.pop('basket', None)
 
     return user
 
@@ -262,6 +365,28 @@ def get_user():
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
+
+
+def storeBasket():
+    """
+    Store basket on user record if user is signed in
+    """
+
+    user = get_user()
+
+    if "email" in user:
+        mongo.db.users.update_one({"email": user["email"]}, {"$set": {"basket": session["basket"]}})
+
+
+def indexOf(array,key,value):
+    """
+    Return first index of specific key with a specific value in an array of objects.
+    Nothing found returns index -1
+    """
+    for index, element in enumerate(array):
+        if element[key] == value:
+            return index
+    return -1
 
 
 if __name__ == "__main__":

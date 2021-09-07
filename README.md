@@ -342,7 +342,7 @@ The template shop-homepage used on this site is from [Start Bootstrap](https://s
 
 The photos used in this site were obtained from:
 
-- ...
+- [Lion image](https://puzzlefactory.pl/sv/pussel/spela/fe/205569-animated-lion)
 
 ### Acknowledgements
 
