@@ -1,9 +1,0 @@
-{% extends "base.html" %} {% block content %}
-<div
-  class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
->
-  {% for reservation in reservations %}
-  <div class="col mb-5">{{ reservation.order_date_last_progress.generation_time }}</div>
-  {% endfor %}
-</div>
-{% endblock %}

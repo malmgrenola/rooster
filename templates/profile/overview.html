@@ -54,13 +54,11 @@
     <div
       class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
     >
-      <ul>
-        {% if not reservations %}
-        <li>No reservations made yet</li>
-        {% endif %} {% for reservation in reservations %}
-        <li>{{reservation}}</li>
-        {% endfor %}
-      </ul>
+      {% if not reservations %}
+      <p>No reservations made yet</p>
+      {% else %}
+      <a href="reservations">Reservations</a>
+      {% endif %}
     </div>
   </div>
 </section>

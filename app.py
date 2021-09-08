@@ -139,8 +139,8 @@ def basket():
             user = get_user()
 
             reservation = {
-            "client-name": user["name"],
-            "client-email": user["email"],
+            "client_name": user["name"],
+            "client_email": user["email"],
             "order_comment": "",
             "order_date_confirm": 0,
             "order_date_last_progress": datetime.today(),
@@ -158,37 +158,6 @@ def basket():
             pass
 
     return render_template("basket.html",page_title="Basket")
-
-@app.route("/reservations")
-def reservations():
-    """
-    Render reservations for route "/reservations" and set page title
-    """
-    if "user" in session:
-        user = session["user"]
-        user = "john@exampledomain.com"
-        reservations = mongo.db.reservations.find({"client_email": user})
-
-    return render_template("reservations.html",page_title="Reservation", reservations=reservations)
-
-
-@app.route("/reservation/")
-@app.route("/reservation/<reservation_id>")
-def reservation(reservation_id=0):
-    """
-    Render reservation for route "/reservation" and set page title
-    """
-
-    user = get_user()
-
-    if reservation_id == 0:
-        reservation = get_basketReservation(user)
-    else:
-        reservation = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)})
-
-    print(100,reservation)
-
-    return render_template("reservation.html",page_title="reservation", reservation=reservation)
 
 
 @app.route("/register", methods=["GET","POST"])
@@ -297,7 +266,36 @@ def profile():
         session["user"] = request.form.get("email").lower()
         flash("Your new details are saved")
 
-    return render_template("/profile/overview.html",page_title="User")
+    reservations = mongo.db.reservations.find({"client_email": user})
+    return render_template("/profile/overview.html",page_title="User",reservations=reservations)
+
+
+@app.route("/profile/reservations")
+def reservations():
+    """
+    Render reservations for route "profile/reservations" and set page title
+    """
+    user = get_user()
+
+    if not user:
+        return redirect(url_for("signin"))
+
+    reservations = list(mongo.db.reservations.find({"client_email": user["email"]}))
+    return render_template("profile/reservations.html",page_title="Reservation", reservations=reservations)
+
+
+@app.route("/profile/reservation/")
+@app.route("/profile/reservation/<reservation_id>")
+def reservation(reservation_id=0):
+    """
+    Render reservation for route "/reservation" and set page title
+    """
+
+    user = get_user()
+
+    reservation = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)})
+
+    return render_template("profile/reservation.html",page_title="reservation", reservation=reservation)
 
 
 @app.route("/logout")
@@ -354,6 +352,7 @@ def get_user():
     if not user:
         return {}
 
+    # Remove data we don't want to share
     user.pop('password', None)
     user.pop('isAdmin', None)
     user.pop('_id', None)
