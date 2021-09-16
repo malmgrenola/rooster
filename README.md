@@ -170,6 +170,8 @@ Each product client would like to reserve.
 
 The sample products is provided from:
 
+About text is used from [Tapnell farm](https://tapnellfarm.com/about-tapnell-farm)
+
 #### Style Information
 
 ##### Selected Typefaces
@@ -343,8 +345,14 @@ The template shop-homepage used on this site is from [Start Bootstrap](https://s
 The photos used in this site were obtained from:
 
 - [Lion image](https://puzzlefactory.pl/sv/pussel/spela/fe/205569-animated-lion)
+- https://www.canstockphoto.se/rooster-skiss-34836572.html
+- https://www.rawpixel.com/image/2603952
+-
 
 ### Acknowledgements
 
 - I received inspiration from [code institute](https://codeinstitute.net/)
 - https://www.chromium.org/developers/design-documents/create-amazing-password-forms
+- https://farmorslycka.se/en/farmshop/
+- https://www.beckettsfarm.co.uk/farm-shop/click-and-collect/
+- https://farmshop.lospoblanos.com/cart
