@@ -10,50 +10,83 @@
 <!-- Section-->
 <section class="py-5">
   <div class="container px-4 px-lg-5 mt-5">
-    <form action="{{ url_for('basket') }}" method="post" >
-    <div
-      class="row justify-content-center"
-    ><div class="col mb-5">
-      {% if basket %}
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Product</th>
-            <th scope="col">Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for product in basket %}
-          <tr>
-            <td>{{product.name}}</td>
-            <td>
-                <form id="form-{{product.id}}" method="POST" action="/basket">
-                  <div class="input-group">
-                      <input id="amount-{{product.id}}" name="input" type="number" min="1" max="30" class="form-control basket-on-enter" placeholder="0" aria-label="amount" value={{product.amount}}>
-                      <button id="update-{{product.id}}" name="update" value="{{product.id}}" class="btn btn-outline-secondary basket-update" type="submit">update</button>
-                      <button id="del-{{product.id}}"  name="delete" value="{{product.id}}" class="btn btn-outline-secondary" type="submit"><i class="bi bi-trash-fill"></i></button>
-
-                  </div>
-              </form>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      {% else %}
-      <p>No products in basket.</p>
-      <p>Here is a Lion!</p>
-      <img src="https://assets.puzzlefactory.pl/puzzle/205/569/original.webp" alt="image of lion">
-      {% endif %}
-    </div>
-    </div>
-    <div
-      class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
-    ><div class="col mb-5">
-      <input class="btn btn-outline-dark mt-auto"type="submit" name="place" value="Place reservation">
-    </div>
+    <form action="{{ url_for('basket') }}" method="post">
+      <div class="row justify-content-center">
+        <div class="col mb-5">
+          {% if basket %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in basket %}
+              <tr>
+                <td>{{product.name}}</td>
+                <td>
+                  <form id="form-{{product.id}}" method="POST" action="/basket">
+                    <div class="input-group">
+                      <input
+                        id="amount-{{product.id}}"
+                        name="input"
+                        type="number"
+                        min="1"
+                        max="30"
+                        class="form-control basket-on-enter"
+                        placeholder="0"
+                        aria-label="amount"
+                        value="{{product.amount}}"
+                      />
+                      <button
+                        id="update-{{product.id}}"
+                        name="update"
+                        value="{{product.id}}"
+                        class="btn btn-outline-secondary basket-update"
+                        type="submit"
+                      >
+                        update
+                      </button>
+                      <button
+                        id="del-{{product.id}}"
+                        name="delete"
+                        value="{{product.id}}"
+                        class="btn btn-outline-secondary"
+                        type="submit"
+                      >
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
+                    </div>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p>No products in basket.</p>
+          <p>Here is a Lion!</p>
+          <img
+            src="https://assets.puzzlefactory.pl/puzzle/205/569/original.webp"
+            alt="image of lion"
+          />
+          {% endif %}
+        </div>
       </div>
-      </form>
+      <div
+        class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
+      >
+        <div class="col mb-5">
+          <input
+            class="btn btn-outline-dark mt-auto"
+            type="submit"
+            name="place"
+            value="Pre-order and collect"
+          />
+        </div>
+      </div>
+    </form>
   </div>
 </section>
- {% endblock %}
+{% endblock %}
