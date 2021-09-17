@@ -1,59 +1,100 @@
 {% extends "base.html" %} {% block content %}
-<!-- Header-->
-<header class="bg-dark py-5">
-  <div class="container px-4 px-lg-5 my-5">
-    <div class="text-center text-white">
-      <h1 class="display-4 fw-bolder">Shop in style</h1>
-      <p class="lead fw-normal text-white-50 mb-0">
-        With this shop hompeage template
-      </p>
-    </div>
-  </div>
-</header>
 <!-- Section-->
-<section class="py-5">
+<section class="py-5 text-light">
   <div class="container px-4 px-lg-5 mt-5">
     <div
       class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
     >
-    {% for product in products %}
+      {% for product in products %}
 
-    <div class="col mb-5">
-      <div class="card h-100">
-        <!-- Sale badge-->
-        <div
-          class="badge bg-dark text-white position-absolute"
-          style="top: 0.5rem; right: 0.5rem"
-        >
-          Sale
-        </div>
-        <!-- Product image-->
-        <img
-          class="card-img-top"
-          src="{{ product.image_url }}"
-          alt="Image of {{ product.name }}"
-        />
-        <!-- Product details-->
-        <div class="card-body p-4">
-          <div class="text-center">
-            <!-- Product name-->
-            <h5 class="fw-bolder">{{ product.name }}</h5>
-            <!-- Product price-->
-            {{ product.price }}
+      <div class="col mb-5">
+        <div class="card h-100 bg-dark rounded-3">
+          <!-- Sale badge-->
+          <div
+            class="badge bg-dark text-white position-absolute"
+            style="top: 0.5rem; right: 0.5rem"
+          >
+            Sale
           </div>
-        </div>
-        <!-- Product actions-->
-        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-          <div class="text-center">
-            <form action="{{ url_for('index') }}" method="post">
-              <input id="product_id" name="product_id" value="{{product._id}}" hidden>
-              <input class="btn btn-outline-dark mt-auto"type="submit" value="Add to Basket">
-            </form>
+          <!-- Product image-->
+          <img
+            class="card-img-top"
+            src="{{ product.image_url }}"
+            alt="Image of {{ product.name }}"
+          />
+          <!-- Product details-->
+          <div class="card-body p-4">
+            <div class="text-center">
+              <!-- Product name-->
+              <h5 class="fw-bolder">{{ product.name }}</h5>
+              <!-- Product price-->
+              {{ product.price }}
+            </div>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center">
+              <form action="{{ url_for('index') }}" method="post">
+                <input
+                  id="product_id"
+                  name="product_id"
+                  value="{{product._id}}"
+                  hidden
+                />
+                <input
+                  class="btn btn-outline-light mt-auto"
+                  type="submit"
+                  value="Add to Basket"
+                />
+              </form>
+            </div>
           </div>
         </div>
       </div>
+      {% endfor %}
     </div>
-    {% endfor %}
+    <div class="row justify-content-center">
+      <div class="col bg-dark rounded-3 p-4">
+        <p>
+          Our family has been in farming for over one hundred years and we took
+          over the care of Tapnell and East Afton Farms in 1982. At its peak,
+          the farm milked 800 cows and produced 24,000 litres of fresh wholesome
+          milk 365 days of the year, no exceptions!
+        </p>
+        <p>
+          Today, we no longer milk cows at Tapnell, but the Farm has become the
+          Isle of Wight’s leading eco-tourism business and home to award-winning
+          Tom’s Eco Lodge, Tapnell Farm Park attraction, The Cow Restaurant &
+          Bar - and opening this summer, the Isle of Wight's only outdoor Aqua
+          Park!
+        </p>
+        <p>
+          Sustainability is at the heart of everything we do, whether taking
+          water from our bore hole to supply the farm, using the sun to make
+          electricity for hundreds of homes, powering our heating systems with
+          our biomass boiler or growing over 30 acres of new woodland and
+          hedgerows. It’s ingrained in everything we do.
+        </p>
+        <p>
+          The golden rule for us is to pass on our farm in better environmental
+          and productive health than it was at the beginning of our life’s
+          tenure.
+        </p>
+        <p>
+          There’s still much to do and we are certainly up for the challenge!
+        </p>
+        <p>
+          Sitting on the site of the 1970 Isle of Wight pop festival, our farm
+          is surrounded by a patchwork of fields that form the pasture and
+          meadows of the countryside, which gently undulate with Tapnell Down to
+          the south and Hamstead Heritage Coast and coastal woodlands to the
+          north. The picturesque chalk down grassland and forests to the south
+          are not only part of the protected landscape but are also Sites of
+          Special Scientific Interest and described by Natural England as being
+          “probably the best example in Britain of chalk grassland under
+          maritime influence.
+        </p>
+      </div>
     </div>
   </div>
 </section>

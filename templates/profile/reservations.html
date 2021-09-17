@@ -18,7 +18,7 @@
         <tr>
           <td>
             <a href="reservation/{{ reservation._id }}"
-              >{{ 'Not confirmed (' ~
+              >{{ 'Not placed (' ~
               reservation.order_date_last_progress.strftime('%Y-%m-%d') ~ ')' if
               reservation.order_date_place == 0 else reservation._id }}</a
             >
@@ -28,14 +28,13 @@
             reservation.order_date_pickup.strftime('%Y-%m-%d') }}
           </td>
           <td>
-            {{ 'Not placed' if reservation.order_date_place == 0 else 'Order
-            placed' }}
+            {{ reservation.reservation_status }}
           </td>
           <td>
             {{ '-' if reservation.order_date_place == 0 else
             reservation.order_date_place.strftime('%Y-%m-%d') }}
           </td>
-          <td>{{ reservation.products | sum(attribute='amount') }}</td>
+          <td>${{ reservation.reservation_total }}</td>
           <td><i class="fas fa-share-alt"></i></td>
         </tr>
 

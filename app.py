@@ -67,7 +67,8 @@ def search():
 
 
 @app.route("/products")
-def products():
+@app.route("/products/<category>")
+def products(category=None):
     """
     Render products for route "/products" and set page title
     """
@@ -281,6 +282,28 @@ def reservations():
         return redirect(url_for("signin"))
 
     reservations = list(mongo.db.reservations.find({"client_email": user["email"]}))
+
+    # inject calculations & status
+    for reservation in reservations:
+        order_total = 0
+        for product in reservation["products"]:
+            sum = int(product["amount"]) * float(product["price"])
+            product["sum"] = sum
+            order_total += sum
+        reservation["reservation_total"] = order_total
+
+        statuses = ["Not Placed", "Not Confirmed by shop", "Confirmed", "Ready for pickup", "Collected"]
+
+        status = 0
+
+        if reservation["order_date_place"] != 0 and reservation["order_date_confirm"] == 0:
+            status = 1
+
+        if reservation["order_date_confirm"] != 0:
+            status = 2
+
+        reservation["reservation_status"] = statuses[status]
+
     return render_template("profile/reservations.html",page_title="Reservation", reservations=reservations)
 
 
@@ -316,9 +339,17 @@ def get_session():
 
     user = get_user()
     basket = get_basket()
-    categories = mongo.db.categories.find()
+    categories = list(mongo.db.categories.find())
 
-    return dict(user=user,basket=basket,categories=categories)
+    basketItems = 0
+    for product in basket:
+        basketItems += int(product["amount"])
+
+    print(basketItems)
+    for category in categories:
+        category["name"] = category["name"].upper()
+
+    return dict(user=user,basket=basket,basketItems=basketItems,categories=categories)
 
 
 def get_basket():

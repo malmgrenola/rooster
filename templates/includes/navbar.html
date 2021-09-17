@@ -1,81 +1,84 @@
 <!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container px-4 px-lg-5">
-    <a class="navbar-brand" href="{{ url_for('index') }}"
-      >Purple Rooster Farm Shop <i class="fas fa-smile"></i
-    ></a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-        <li class="nav-item">
-          <a
-            class="nav-link active"
-            aria-current="page"
-            href="{{ url_for('index') }}"
-            >Home</a
-          >
-        </li>
-        <li class="nav-item"></li>
-      </ul>
-      <form class="d-flex">
-        <div class="input-group">
-          <button
-            class="btn btn-outline-secondary dropdown-toggle"
-            id="dropdown"
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            All Products
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <span class="dropdown-item" href="#">All Products</span>
+<header>
+  <h1>
+    <a class="" href="{{ url_for('index') }}"
+      ><img
+        src="{{ url_for('static',filename='assets/logo.png')}}"
+        alt="purple rooster farm shop logo"
+    /></a>
+  </h1>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+    <div class="container-fluid px-4 px-lg-5">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="w-100 d-flex">
+          <ul class="navbar-nav flex-grow-1">
+            <li class="nav-item   ">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="{{ url_for('index') }}"
+                >ABOUT</a
+              >
             </li>
-            <li><hr class="dropdown-divider" /></li>
             {% if categories %} {% for category in categories %}
-            <li><span class="dropdown-item">{{ category.name }}</span></li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                aria-current="page"
+                href="{{ url_for('products',category=category.name) }}"
+                >{{ category.name }}</a
+              >
+            </li>
             {% endfor %} {% endif %}
+
+            <li class="nav-item"></li>
           </ul>
-          <input
-            type="text"
-            class="form-control"
-            aria-label="Text input with dropdown button"
-          />
-          <button type="button" class="btn btn-outline-secondary">
-            <i class="bi bi-search"></i>
-          </button>
+          <ul class="navbar-nav d-flex justify-content-end">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                aria-current="page"
+                href="{{ url_for('index') }}"
+                ><i class="fas fa-search"></i
+              ></a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                aria-current="page"
+                href="{{ url_for('profile') }}"
+                ><i class="fas fa-user-circle"></i
+              ></a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link position-relative"
+                aria-current="page"
+                href="{{ url_for('basket') }}"
+                ><i class="fas fa-shopping-cart "></i>{% if basketItems > 0
+                %}<span
+                  class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"
+                >
+                  {{ basketItems }}
+                  <span class="visually-hidden">unread messages</span> </span
+                >{% endif %}</a
+              >
+            </li>
+          </ul>
         </div>
-      </form>
-
-      <a class="btn btn-outline-dark" href="{{ url_for('basket') }}">
-        <i class="bi-cart-fill me-1"></i>
-        Basket
-        <span class="badge bg-dark text-white ms-1 rounded-pill">{{ basket|length }}</span>
-      </a>
-
-      <ul>
-        <li class="nav-item">
-          {% if user %}
-          <a class="" href="{{ url_for('profile') }}">My Page</a>
-
-          <a class="" href="{{ url_for('logout') }}">Sign out</a>{% else %}
-          <a class="" href="{{ url_for('register') }}">Sign up</a>
-          |
-          <a class="" href="{{ url_for('signin') }}">Sign in</a>
-          {% endif %}
-        </li>
-      </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</header>
