@@ -1,0 +1,71 @@
+{% extends "admin/admin_base.html" %} {% block admin_base %}
+<h3>{{category.name}}</h3>
+<form
+  id="form-{{category._id}}"
+  method="POST"
+  enctype="multipart/form-data"
+  action="{{ url_for('admin_category',category_id=category._id) }}"
+>
+  <table class="table table-sm table-dark">
+    <tbody>
+      <tr>
+        <th scope="row" class="w-25">Name</th>
+        <td>
+          <input
+            class="w-100"
+            type="input"
+            placeholder="Add category name"
+            id="category_name"
+            name="category_name"
+            value="{{category.name}}"
+            required
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">Image</th>
+        <td>
+          {% if category.image_url != "" %}
+          <img
+            src="{{category.image_url}}"
+            alt="{{category.name}} image"
+            class="img-thumbnail"
+          />
+          {% else %}
+          <label for="image">Choose a category picture:</label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/png, image/jpeg"
+          />
+          <button
+            class="btn btn-light btn-sm"
+            type="submit"
+            id="upload"
+            name="upload"
+          >
+            Upload
+          </button>
+          {% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a class="btn btn-light btn-sm" href="{{ url_for('admin_categories') }}">
+    Back to categories
+  </a>
+  <button class="btn btn-light btn-sm" type="submit" id="save" name="save">
+    Save
+  </button>
+  <button
+    class="btn btn-light btn-sm"
+    type="submit"
+    id="delete"
+    name="delete"
+    formnovalidate
+  >
+    Delete category
+  </button>
+</form>
+{% endblock %}

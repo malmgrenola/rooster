@@ -1,0 +1,33 @@
+{% extends "admin/admin_base.html" %} {% block admin_base %}
+
+<h3>Categories</h3>
+<table class="table table-sm table-dark">
+  <thead>
+    <tr>
+      <th scope="col">Image</th>
+      <th scope="col">Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for category in categories %}
+    <tr>
+      <td>
+        <img
+          src="{{category.image_url}}"
+          alt="{{category.name}} image"
+          class="img-thumbnail"
+        />
+      </td>
+      <td>
+        <a href="category/{{category._id}}"
+          >{% if category.name == "" %}No name{% endif %}{{category.name}}</a
+        >
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a class="btn btn-light btn-sm" href="category/new">
+  Create New
+</a>
+{% endblock %}

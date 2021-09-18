@@ -437,6 +437,52 @@ def admin_collect_details(reservation_id=None,product_id=None):
     return render_template("admin/collect_details.html",page_title="Click & Collect",details=details)
 
 
+@app.route("/admin/categories")
+def admin_categories():
+    """
+    Render categories for route "/categories" and set page title
+    Categories are already fetched with context providers
+    """
+    return render_template("admin/categories.html",page_title="Categories")
+
+
+@app.route("/admin/category/<category_id>", methods=['GET','POST'])
+def admin_category(category_id=None):
+    """
+    Render category from id for route "/category/id" and set page title
+    """
+    if request.method == "POST":
+        if "save" in request.form:
+            data = {}
+            data["name"] = request.form.get("category_name")
+            mongo.db.categories.update_one({"_id": ObjectId(category_id)}, {"$set": data})
+            flash("Category details saved")
+            return redirect(url_for("admin_categories"))
+
+        if "delete" in request.form:
+            mongo.db.categories.delete_one({"_id": ObjectId(category_id)})
+            flash("Category deleted")
+            return redirect(url_for("admin_categories"))
+
+        if "upload" in request.form:
+            filename = handleUpload(request)
+            if filename != "":
+                mongo.db.categories.update_one({"_id": ObjectId(category_id)}, {"$set": {"image_url": "https://d1o374on78xxxv.cloudfront.net/media/"+filename}})
+                return redirect(url_for("admin_category",category_id=category_id))
+
+
+    if category_id == "new":
+        id = mongo.db.categories.insert_one({
+        "name": "",
+        "image_url": ""}).inserted_id
+
+        return redirect(url_for("admin_category",category_id=id))
+
+
+    category = mongo.db.categories.find_one({"_id": ObjectId(category_id)})
+
+    return render_template("admin/category.html",page_title="Category",category=category)
+
 @app.route("/admin/products")
 def admin_products():
 
@@ -469,26 +515,13 @@ def admin_product(product_id=None):
         if "delete" in request.form:
             mongo.db.products.delete_one({"_id": ObjectId(product_id)})
             flash("Product deleted")
-
             return redirect(url_for("admin_products"))
 
         if "upload" in request.form:
-            print(1,request.files)
-            if 'image' not in request.files:
-                flash('No file ')
-                return redirect(url_for("admin_product",product_id=product_id))
-            file = request.files['image']
-            if file.filename == '':
-                flash('No selected file')
-                return redirect(url_for("admin_product",product_id=product_id))
-            if file:
-                filename = secure_filename(file.filename)
+            filename = handleUpload(request)
+            if filename != "":
                 mongo.db.products.update_one({"_id": ObjectId(product_id)}, {"$set": {"image_url": "https://d1o374on78xxxv.cloudfront.net/media/"+filename}})
-                data = file.read()
-                s3.Bucket('cdn.rooster').put_object(Key="media/"+filename, Body=data)
-                flash('file uploaded')
                 return redirect(url_for("admin_product",product_id=product_id))
-
 
     if product_id == "new":
         id = mongo.db.products.insert_one({
@@ -631,27 +664,24 @@ def getDateTime(timestamp):
     return timestamp
 
 
-def upload_file(file_name, bucket, object_name=None):
-    """Upload a file to an S3 bucket
+def handleUpload(request):
+    if 'image' not in request.files:
+        flash('No file')
+        return ""
 
-    :param file_name: File to upload
-    :param bucket: Bucket to upload to
-    :param object_name: S3 object name. If not specified then file_name is used
-    :return: True if file was uploaded, else False
-    """
+    file = request.files['image']
+    if file.filename == '':
+        flash('No selected file')
+        return ""
 
-    # If S3 object_name was not specified, use file_name
-    if object_name is None:
-        object_name = os.path.basename(file_name)
+    if file:
+        filename = secure_filename(file.filename)
+        data = file.read()
+        s3.Bucket('cdn.rooster').put_object(Key="media/"+filename, Body=data)
+        flash('file uploaded')
+        return filename
+    return ""
 
-    # Upload the file
-    s3_client = boto3.client('s3')
-    try:
-        response = s3_client.upload_file(file_name, bucket, object_name)
-    except ClientError as e:
-        logging.error(e)
-        return False
-    return True
 
 if __name__ == "__main__":
     """
