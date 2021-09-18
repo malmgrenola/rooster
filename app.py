@@ -5,6 +5,7 @@ from flask import (
 from markupsafe import escape
 from flask_pymongo import PyMongo
 from bson import json_util, ObjectId
+from bson.decimal128 import Decimal128, create_decimal128_context
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
 import urllib
@@ -136,10 +137,10 @@ def basket():
 
         elif "place" in request.form:
             # Create a reservetion with current basket
-            print("place",request.form["place"])
             user = get_user()
 
             reservation = {
+            "client_id": user["_id"],
             "client_name": user["name"],
             "client_email": user["email"],
             "order_comment": "",
@@ -147,6 +148,7 @@ def basket():
             "order_date_last_progress": datetime.today(),
             "order_date_pickup": 0,
             "order_date_place": 0,
+            "order_date_completed":0,
             "products": basket
             }
             id = mongo.db.reservations.insert_one(reservation).inserted_id
@@ -331,6 +333,103 @@ def logout():
     return redirect(url_for("signin"))
 
 
+@app.route("/admin")
+def admin():
+
+    return redirect(url_for("admin_collect"))
+
+
+@app.route("/admin/collect")
+def admin_collect():
+
+    reservations = list(mongo.db.reservations.find())
+
+    for reservation in reservations:
+        order_value = 0
+        order_item_count = 0
+
+        for product in reservation["products"]:
+            sum = int(product["amount"]) * float(product["price"])
+            order_item_count += int(product["amount"])
+            print(product["amount"], product["price"], sum)
+            product["sum"] = sum
+            order_value += sum
+        reservation["order_value"] = order_value
+        reservation["order_item_count"] = order_item_count
+        reservation["order_date_place"] = getDateTime(reservation["order_date_place"])
+        reservation["order_date_pickup"] = getDateTime(reservation["order_date_pickup"])
+
+    return render_template("admin/collect.html",page_title="Click & Collect",reservations=reservations)
+
+
+@app.route("/admin/collect/<reservation_id>", methods=['GET','POST'])
+@app.route("/admin/collect/<reservation_id>/<product_id>", methods=['GET','POST'])
+def admin_collect_details(reservation_id=None,product_id=None):
+
+    if request.method == "POST":
+
+        if "save" in request.form:
+            data = {}
+            if (request.form.get("pickup-date-time") != ""):
+                data["pickup-date-time"] = request.form.get("pickup-date-time")
+
+            data["order_comment"] = request.form.get("order_comment")
+
+            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": data})
+            flash("Changes saved")
+
+            return redirect(url_for("admin_collect_details",reservation_id=reservation_id))
+
+        if "confirm" in request.form:
+            flash("click & collect pickup confirmed")
+            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"order_date_confirm": datetime.today()}})
+            return redirect(url_for("admin_collect_details",reservation_id=reservation_id))
+
+        if "cancel" in request.form:
+            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {
+            "$set": {
+            "order_date_confirm": 0
+            }})
+            flash("click & collect pickup canceled")
+            return redirect(url_for("admin_collect_details",reservation_id=reservation_id))
+
+        products = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)})["products"]
+        index = indexOf(products,"id",ObjectId(product_id))
+
+        if "delete" in request.form:
+            products.pop(index)
+            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
+            flash("product removed")
+
+        elif "update" in request.form:
+
+            products[index]["amount"] = request.form.get("input")
+            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
+            flash("product amount updated")
+
+        return redirect(url_for("admin_collect_details",reservation_id=reservation_id))
+
+
+    details = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)})
+
+    if (details["order_date_pickup"]!= 0):
+        details["order_date_pickup_datetime"] = datetime.strftime(details["order_date_pickup"], '%Y-%m-%dT%H:%M')
+
+    return render_template("admin/collect_details.html",page_title="Click & Collect",details=details)
+
+
+@app.route("/admin/products")
+def admin_products():
+
+    return render_template("admin/products.html",page_title="Products")
+
+
+@app.route("/admin/users")
+def admin_users():
+
+    return render_template("admin/users.html",page_title="Users")
+
+
 @app.context_processor
 def get_session():
     """
@@ -417,6 +516,14 @@ def indexOf(array,key,value):
         if element[key] == value:
             return index
     return -1
+
+
+def getDateTime(timestamp):
+    print(20,timestamp)
+    if (timestamp != 0):
+        return timestamp.strftime('%Y-%m-%d %H:%M')
+
+    return timestamp
 
 
 if __name__ == "__main__":

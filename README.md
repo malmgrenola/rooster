@@ -143,17 +143,18 @@ Products collection holds information about each product.
 
 Reservation collection holds each reservation in separate records.
 
-| field                                  | type      | description                                   |
-| -------------------------------------- | --------- | --------------------------------------------- |
-| \_id                                   | ObjectId  | unique record id                              |
-| client-name                            | string    | Holds client Full name                        |
-| client-email                           | string    | Holds client email address                    |
-| [products](#products-array-of-objects) | Array     | Holds an array of product objects             |
-| order-comment                          | string    | Client order comment                          |
-| order-date-pickup                      | Timestamp | Date when client pickups order                |
-| order-date-place                       | Timestamp | Date when client placed order                 |
-| order-date-last-progress               | Timestamp | Date when client last updated order           |
-| order-date-confirm                     | Timestamp | Date when farm shop admin confirmed the order |
+| field                                  | type     | description                                   |
+| -------------------------------------- | -------- | --------------------------------------------- |
+| \_id                                   | ObjectId | unique record id                              |
+| client-name                            | string   | Holds client Full name                        |
+| client-email                           | string   | Holds client email address                    |
+| [products](#products-array-of-objects) | Array    | Holds an array of product objects             |
+| order-comment                          | string   | Client order comment                          |
+| order-date-pickup                      | Date     | Date when client pickups order                |
+| order-date-place                       | Date     | Date when client placed order                 |
+| order-date-last-progress               | Date     | Date when client last updated order           |
+| order-date-confirm                     | Date     | Date when farm shop admin confirmed the order |
+| order-date-completed                   | Date     | Date when order is payed and collected        |
 
 ###### Products Array of objects
 
@@ -347,6 +348,7 @@ The photos used in this site were obtained from:
 - [Lion image](https://puzzlefactory.pl/sv/pussel/spela/fe/205569-animated-lion)
 - https://www.canstockphoto.se/rooster-skiss-34836572.html
 - https://www.rawpixel.com/image/2603952
+- https://www.rawpixel.com/image/2453127/free-illustration-png-apple-fruit
 -
 
 ### Acknowledgements
