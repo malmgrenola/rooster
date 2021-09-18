@@ -321,6 +321,8 @@ Site is deployed to https://purple-rooster.herokuapp.com/ using [Heruko](https:/
 
 Heruko is connected to the Github repository with automatic deploy from the branch `main`.
 
+`pip3 freeze > requirements.txt`
+
 Every new commit triggers a deploy.
 
 ## Development
