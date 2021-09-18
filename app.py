@@ -8,8 +8,12 @@ from bson import json_util, ObjectId
 from bson.decimal128 import Decimal128, create_decimal128_context
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 import urllib
 from datetime import datetime
+import boto3
+from botocore.exceptions import ClientError
+import logging
 
 if os.path.exists("env.py"):
     import env
@@ -22,6 +26,16 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 mongo = PyMongo(app)
+
+
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
+    aws_session_token=os.environ.get("AWS_SESSION_TOKEN")
+)
+s3 = boto3.resource('s3')
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -426,8 +440,73 @@ def admin_collect_details(reservation_id=None,product_id=None):
 @app.route("/admin/products")
 def admin_products():
 
-    return render_template("admin/products.html",page_title="Products")
+    products = list(mongo.db.products.find())
 
+    for product in products:
+        for category in product["categories"]:
+            product["categories"] = mongo.db.categories.find_one({"_id": ObjectId(category)})
+
+    return render_template("admin/products.html",page_title="Products",products=products)
+
+
+@app.route("/admin/product/<product_id>", methods=['GET','POST'])
+def admin_product(product_id=None):
+
+    if request.method == "POST":
+
+        if "save" in request.form:
+            data = {}
+            data["name"] = request.form.get("product_name")
+            data["description"] = request.form.get("description")
+            data["price"] = float(request.form.get("price"))
+            data["categories"] = [ObjectId(request.form.get("category"))]
+
+            mongo.db.products.update_one({"_id": ObjectId(product_id)}, {"$set": data})
+            flash("Product details saved")
+
+            return redirect(url_for("admin_products"))
+
+        if "delete" in request.form:
+            mongo.db.products.delete_one({"_id": ObjectId(product_id)})
+            flash("Product deleted")
+
+            return redirect(url_for("admin_products"))
+
+        if "upload" in request.form:
+            print(1,request.files)
+            if 'image' not in request.files:
+                flash('No file ')
+                return redirect(url_for("admin_product",product_id=product_id))
+            file = request.files['image']
+            if file.filename == '':
+                flash('No selected file')
+                return redirect(url_for("admin_product",product_id=product_id))
+            if file:
+                filename = secure_filename(file.filename)
+                mongo.db.products.update_one({"_id": ObjectId(product_id)}, {"$set": {"image_url": "https://d1o374on78xxxv.cloudfront.net/media/"+filename}})
+                data = file.read()
+                s3.Bucket('cdn.rooster').put_object(Key="media/"+filename, Body=data)
+                flash('file uploaded')
+                return redirect(url_for("admin_product",product_id=product_id))
+
+
+    if product_id == "new":
+        id = mongo.db.products.insert_one({
+        "name": "",
+        "price": None,
+        "categories": [],
+        "description": "",
+        "image_url": ""}).inserted_id
+
+        return redirect(url_for("admin_product",product_id=id))
+
+    product = mongo.db.products.find_one({"_id": ObjectId(product_id)})
+
+    if "categories" in product:
+        for category in product["categories"]:
+            product["categories"] = mongo.db.categories.find_one({"_id": ObjectId(category)})
+
+    return render_template("admin/product.html",page_title="Product",product=product)
 
 @app.route("/admin/users")
 def admin_users():
@@ -470,9 +549,9 @@ def get_session():
     for product in basket:
         basketItems += int(product["amount"])
 
-    print(basketItems)
-    for category in categories:
-        category["name"] = category["name"].upper()
+    # print(basketItems)
+    # for category in categories:
+    #     category["name"] = category["name"].upper()
 
     return dict(user=user,basket=basket,basketItems=basketItems,categories=categories)
 
@@ -551,6 +630,28 @@ def getDateTime(timestamp):
 
     return timestamp
 
+
+def upload_file(file_name, bucket, object_name=None):
+    """Upload a file to an S3 bucket
+
+    :param file_name: File to upload
+    :param bucket: Bucket to upload to
+    :param object_name: S3 object name. If not specified then file_name is used
+    :return: True if file was uploaded, else False
+    """
+
+    # If S3 object_name was not specified, use file_name
+    if object_name is None:
+        object_name = os.path.basename(file_name)
+
+    # Upload the file
+    s3_client = boto3.client('s3')
+    try:
+        response = s3_client.upload_file(file_name, bucket, object_name)
+    except ClientError as e:
+        logging.error(e)
+        return False
+    return True
 
 if __name__ == "__main__":
     """

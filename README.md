@@ -212,6 +212,8 @@ In this section, all of the languages, frameworks, libraries, and any other tool
   - Used to start dev environment
 - [emailjs](https://www.emailjs.com/)
   - Used to send email from site
+- [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html#)
+  - Used to create, configure, and manage AWS services.
 
 ## Testing
 
