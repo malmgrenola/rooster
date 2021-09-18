@@ -1,0 +1,49 @@
+{% extends "admin/admin_base.html" %} {% block admin_base %}
+<h3>{{user.name}}</h3>
+<form
+  id="form-{{user._id}}"
+  method="POST"
+  action="{{ url_for('admin_user',user_id=user._id) }}"
+>
+  <table class="table table-sm table-dark">
+    <tbody>
+      <tr>
+        <th scope="row" class="w-25">Name</th>
+        <td>
+          <input
+            class="w-100"
+            type="input"
+            id="name"
+            name="name"
+            value="{{user.name}}"
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">Email</th>
+        <td>
+          <input
+            class="w-100"
+            type="email"
+            id="email"
+            name="email"
+            value="{{user.email}}"
+          />
+        </td>
+      </tr>
+      <tr>
+        <td scope="row" colspan="2">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="isadmin"
+            name="isadmin" {% if user.isAdmin == True %}checked{% endif %} />
+            <label class="form-check-label" for="isadmin">Administrator</label>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-light btn-sm" type="submit" id="save" name="save">
+    Save
+  </button>
+</form>
+{% endblock %}

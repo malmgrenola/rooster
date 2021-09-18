@@ -1,0 +1,142 @@
+{% extends "admin/admin_base.html" %} {% block admin_base %}
+
+<h3>Click & Collect</h3>
+<h4>Details</h4>
+<form
+  id="form-{{details._id}}"
+  method="POST"
+  action="{{ url_for('admin_collect_details',reservation_id=details._id) }}"
+>
+  <table class="table table-sm table-dark">
+    <thead>
+      <tr>
+        <th scope="col" colspan="2">Order Information</th>
+        <th scope="col" colspan="2">Dates</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row" class="w-25">Order number</th>
+        <td>{{details._id}}</td>
+        <th scope="row" class="w-25">Pickup Date</th>
+        <td>
+          <input
+            type="datetime-local"
+            id="pickup-date-time"
+            name="pickup-date-time"
+            value="{{details.order_date_pickup_datetime}}"
+            min="2018-06-07T00:00"
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">Name</th>
+        <td>{{details.client_name}}</td>
+        <th scope="row" class="w-25">Order Date</th>
+        <td>
+          {% if details.order_date_place != 0 %}{{details.order_date_place}}{%
+          else %}Not ordered{% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">Email</th>
+        <td>{{details.client_email}}</td>
+        <th scope="row" class="w-25">Pickup Confirmed Date</th>
+        <td>
+          {% if details.order_date_confirm != 0 %}<i
+            class="fas fa-check fs-3 m-2"
+          ></i
+          ><button
+            class="btn btn-outline-light btn-sm"
+            type="submit"
+            id="cancel"
+            name="cancel"
+          >
+            Cancel</button
+          >{% else %}
+          <button
+            class="btn btn-outline-light btn-sm"
+            type="submit"
+            id="confirm"
+            name="confirm"
+          >
+            Confirm Pickup
+          </button>
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">Order comment</th>
+        <td>
+          <input
+            type="input"
+            id="order_comment"
+            name="order_comment"
+            value="{{details.order_comment}}"
+          />
+        </td>
+        <th scope="row" class="w-25">Last_progress</th>
+        <td>{{details.order_date_last_progress}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-light btn-sm" type="submit" id="save" name="save">
+    Save Changes
+  </button>
+</form>
+<h4>Order items</h4>
+<table class="table table-sm table-dark">
+  <thead>
+    <tr>
+      <th scope="col">Product</th>
+      <th scope="col">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in details.products %}
+    <tr>
+      <td>{{product.name}}</td>
+      <td class="w-25">
+        <form
+          id="form-{{product.id}}"
+          method="POST"
+          action="{{ url_for('admin_collect_details',reservation_id=details._id, product_id=product.id) }}"
+        >
+          <div class="input-group">
+            <input
+              id="amount-{{product.id}}"
+              name="input"
+              type="number"
+              min="1"
+              max="30"
+              class="form-control basket-on-enter"
+              placeholder="0"
+              aria-label="amount"
+              value="{{product.amount}}"
+            />
+            <button
+              id="update-{{product.id}}"
+              name="update"
+              value="{{product.id}}"
+              class="btn btn-outline-light basket-update"
+              type="submit"
+            >
+              update
+            </button>
+            <button
+              id="del-{{product.id}}"
+              name="delete"
+              value="{{product.id}}"
+              class="btn btn-outline-light"
+              type="submit"
+            >
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </div>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

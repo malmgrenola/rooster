@@ -1,0 +1,109 @@
+{% extends "admin/admin_base.html" %} {% block admin_base %}
+<h3>{{product.name}}</h3>
+<form
+  id="form-{{product._id}}"
+  method="POST"
+  enctype="multipart/form-data"
+  action="{{ url_for('admin_product',product_id=product._id) }}"
+>
+  <table class="table table-sm table-dark">
+    <tbody>
+      <tr>
+        <th scope="row" class="w-25">Name</th>
+        <td>
+          <input
+            class="w-100"
+            type="input"
+            placeholder="Add product name"
+            id="product_name"
+            name="product_name"
+            value="{{product.name}}"
+            required
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">Description</th>
+        <td>
+          <input
+            class="w-100"
+            type="input"
+            placeholder="Add product description"
+            id="description"
+            name="description"
+            value="{{product.description}}"
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">Price ($)</th>
+        <td>
+          <input
+            class="w-100"
+            type="number"
+            placeholder="Add product price"
+            step="0.1"
+            id="price"
+            name="price"
+            value="{{product.price}}"
+            required
+          />
+        </td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">category</th>
+        <td>
+          <select
+            class="form-select"
+            aria-label="Select product category"
+            id="category"
+            name="category"
+          >
+            {% for category in categories%} {% if product.categories["name"] ==
+            category.name %}
+            <option value="{{category._id}}" selected>{{category.name}}</option>
+            {% else %}
+            <option value="{{category._id}}">{{category.name}}</option>
+            {% endif %} {% endfor %}
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">Image</th>
+        <td>
+          {% if product.image_url != "" %}
+
+          <img
+            src="{{product.image_url}}"
+            alt="{{product.name}} image"
+            class="img-thumbnail"
+          />
+          {% else %}
+          <label for="image">Choose a product picture:</label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/png, image/jpeg"
+          />
+          <button
+            class="btn btn-light btn-sm"
+            type="submit"
+            id="upload"
+            name="upload"
+          >
+            Upload
+          </button>
+          {% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-light btn-sm" type="submit" id="save" name="save">
+    Save
+  </button>
+  <button class="btn btn-light btn-sm" type="submit" id="delete" name="delete">
+    Delete product
+  </button>
+</form>
+{% endblock %}
