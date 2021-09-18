@@ -1,2 +1,29 @@
-{% extends "admin/admin_base.html" %} {% block admin_base %} Users {% endblock
-%}
+{% extends "admin/admin_base.html" %} {% block admin_base %}
+
+<h3>Users</h3>
+<table class="table table-sm table-dark">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Admin</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>
+        <a href="user/{{user._id}}">{{user.name}}</a>
+      </td>
+      <td>{{user.email}}</td>
+      <td>
+        {% if user.isAdmin %}<i class="far fa-check-square"></i>{% else %}<i
+          class="far fa-square"
+        ></i
+        >{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -157,7 +157,6 @@ def basket():
 
         else:
             # a post ation where the the button name is not defiened
-            print("unkown button",request.form)
             pass
 
     return render_template("basket.html",page_title="Basket")
@@ -333,15 +332,21 @@ def logout():
     return redirect(url_for("signin"))
 
 
+
 @app.route("/admin")
 def admin():
+    """
+    Admin area, redirects to admin_collect by default
+    """
 
     return redirect(url_for("admin_collect"))
 
 
 @app.route("/admin/collect")
 def admin_collect():
-
+    """
+    Admin Collect
+    """
     reservations = list(mongo.db.reservations.find())
 
     for reservation in reservations:
@@ -427,8 +432,29 @@ def admin_products():
 @app.route("/admin/users")
 def admin_users():
 
-    return render_template("admin/users.html",page_title="Users")
+    users = list(mongo.db.users.find())
 
+    return render_template("admin/users.html",page_title="Users",users=users)
+
+
+@app.route("/admin/user/<user_id>", methods=['GET','POST'])
+def admin_user(user_id=None):
+    if request.method == "POST":
+        if "save" in request.form:
+            data = {
+            "name": request.form.get("name"),
+            "email": request.form.get("email"),
+            "isAdmin": bool(request.form.get("isadmin"))
+            }
+            mongo.db.users.update_one({"_id": ObjectId(user_id)}, {"$set": data})
+            flash("User saved")
+
+
+    user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+
+    if (not user): return redirect(url_for("admin_users"))
+
+    return render_template("admin/user.html",page_title="Users",user=user)
 
 @app.context_processor
 def get_session():
