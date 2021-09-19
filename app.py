@@ -211,7 +211,7 @@ def signin():
                             session["basket"] = existing_user["basket"]
                             print(301,session)
                         flash("Welcome, {}".format(existing_user["name"]))
-                        return redirect(url_for("profile"))
+                        return redirect(url_for("me"))
             else:
                 # invalid password match
                 flash("Incorrect Username and/or Password")
@@ -226,21 +226,10 @@ def signin():
     return render_template("/auth/signin.html",page_title="Sign in")
 
 
-@app.route("/users")
-def users():
+@app.route("/me/overview", methods=['GET','POST'])
+def me():
     """
-    Render users for route "/users" and set page title
-    """
-
-    users = mongo.db.users.find({})
-
-    return render_template("users.html",page_title="Users", users=users)
-
-
-@app.route("/profile/overview", methods=['GET','POST'])
-def profile():
-    """
-    Render user profile based on session cookie and set page title
+    Render user me based on session cookie and set page title
     Post will update user details and set new user cookie
     """
     user = get_user()
@@ -259,13 +248,13 @@ def profile():
         flash("Your new details are saved")
 
     reservations = mongo.db.reservations.find({"client_email": user})
-    return render_template("/profile/overview.html",page_title="User",reservations=reservations)
+    return render_template("/me/overview.html",page_title="User",reservations=reservations)
 
 
-@app.route("/profile/reservations")
+@app.route("/me/reservations")
 def reservations():
     """
-    Render reservations for route "profile/reservations" and set page title
+    Render reservations for route "me/reservations" and set page title
     """
     user = get_user()
 
@@ -295,11 +284,11 @@ def reservations():
 
         reservation["reservation_status"] = statuses[status]
 
-    return render_template("profile/reservations.html",page_title="Reservation", reservations=reservations)
+    return render_template("me/reservations.html",page_title="Reservation", reservations=reservations)
 
 
-@app.route("/profile/reservation/")
-@app.route("/profile/reservation/<reservation_id>")
+@app.route("/me/reservation/")
+@app.route("/me/reservation/<reservation_id>")
 def reservation(reservation_id=0):
     """
     Render reservation for route "/reservation" and set page title
@@ -309,7 +298,7 @@ def reservation(reservation_id=0):
 
     reservation = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)})
 
-    return render_template("profile/reservation.html",page_title="reservation", reservation=reservation)
+    return render_template("me/reservation.html",page_title="reservation", reservation=reservation)
 
 
 @app.route("/logout")
@@ -320,7 +309,6 @@ def logout():
     session.pop("basket")
 
     return redirect(url_for("signin"))
-
 
 
 @app.route("/admin")
