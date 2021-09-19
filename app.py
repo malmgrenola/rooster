@@ -144,9 +144,14 @@ def basket():
         elif "place" in request.form:
             # Create a reservetion with current basket
             user = get_user()
+            if not user:
+                flash("You must signup or sigin before order can be placed")
+                return redirect(url_for("signin"))
+            user_id = mongo.db.users.find_one({ "email": { "$eq": user["email"] } }).get("_id")
 
+            print(20,user)
             reservation = {
-            "client_id": user["_id"],
+            "client_id": user_id,
             "client_name": user["name"],
             "client_email": user["email"],
             "order_comment": "",
