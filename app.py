@@ -89,27 +89,6 @@ def product(product_id=None):
     return render_template("product.html",page_title=f'Product {escape(product)}', product=product)
 
 
-@app.route("/categories")
-def categories():
-    """
-    Render categories for route "/categories" and set page title
-    """
-    categories = mongo.db.categories.find()
-    print(categories)
-    return render_template("categories.html",page_title="Categories", categories=categories)
-
-
-@app.route("/category/")
-@app.route("/category/<category>")
-def category(category=None):
-    """
-    Render category for route "/category" and set page title
-    """
-    category = mongo.db.categories.find_one()
-    return render_template("category.html",page_title="Category", category=category)
-
-
-
 @app.route("/basket", methods=["GET", "POST"])
 def basket():
     """
