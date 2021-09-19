@@ -63,13 +63,33 @@
               ></a>
             </li>
             <li class="nav-item">
+              {% if user %}
+              <div class="d-flex align-items-center">
+                <div class="">
+                  <a
+                    class="nav-link"
+                    aria-current="page"
+                    href="{{ url_for('profile') }}"
+                    ><i class="fas fa-user-circle"></i
+                  ></a>
+                </div>
+                <div class="text-nav">
+                  <a href="{{ url_for('logout')}}">sign out</a>
+                </div>
+              </div>
+
+              {% else %}
+
               <a
                 class="nav-link"
                 aria-current="page"
-                href="{{ url_for('profile') }}"
+                href="{{ url_for('signin') }}"
                 ><i class="fas fa-user-circle"></i
               ></a>
+
+              {% endif %}
             </li>
+
             <li class="nav-item">
               <a
                 class="nav-link position-relative"

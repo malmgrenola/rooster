@@ -3,3 +3,13 @@ body {
     no-repeat center center fixed;
   background-size: cover;
 }
+
+.text-nav {
+  font-size: 1rem;
+}
+.text-nav a {
+  color: rgba(255, 255, 255, 0.7);
+}
+.text-nav a:hover {
+  color: #fff;
+}
