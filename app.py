@@ -47,7 +47,7 @@ def index():
         if "product_id" in request.form:
             add_basket_item(request.form.get("product_id"),1)
 
-    products = mongo.db.products.find()
+    products = mongo.db.products.aggregate([{ "$sample": { "size": 4 } }])
 
     return render_template("index.html", page_title="Home", products=products)
 
