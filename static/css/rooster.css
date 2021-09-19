@@ -13,3 +13,13 @@ body {
 .text-nav a:hover {
   color: #fff;
 }
+
+.text-tiny {
+  font-size: 0.8rem !important;
+}
+.text-tiny a {
+  color: #fff;
+}
+.text-tiny a:hover {
+  color: rgba(255, 255, 255, 0.7);
+}

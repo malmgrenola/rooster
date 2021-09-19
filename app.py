@@ -241,13 +241,14 @@ def me():
         existing_user = mongo.db.users.find_one({"email": user["email"]})
 
         filter = { '_id': existing_user["_id"] }
-        newvalues = { "$set": {'name': request.form.get("name"), "email": request.form.get("email").lower()} }
+        newvalues = { "$set": {'name': request.form.get("name")} }
 
         mongo.db.users.update_one(filter, newvalues)
-        session["user"] = request.form.get("email").lower()
         flash("Your new details are saved")
+        return redirect(url_for("me"))
 
-    reservations = mongo.db.reservations.find({"client_email": user})
+    reservations = get_reservations()
+    
     return render_template("/me/overview.html",page_title="User",reservations=reservations)
 
 
@@ -261,28 +262,7 @@ def reservations():
     if not user:
         return redirect(url_for("signin"))
 
-    reservations = list(mongo.db.reservations.find({"client_email": user["email"]}))
-
-    # inject calculations & status
-    for reservation in reservations:
-        order_total = 0
-        for product in reservation["products"]:
-            sum = int(product["amount"]) * float(product["price"])
-            product["sum"] = sum
-            order_total += sum
-        reservation["reservation_total"] = order_total
-
-        statuses = ["Not Placed", "Not Confirmed by shop", "Confirmed", "Ready for pickup", "Collected"]
-
-        status = 0
-
-        if reservation["order_date_place"] != 0 and reservation["order_date_confirm"] == 0:
-            status = 1
-
-        if reservation["order_date_confirm"] != 0:
-            status = 2
-
-        reservation["reservation_status"] = statuses[status]
+    reservations = get_reservations()
 
     return render_template("me/reservations.html",page_title="Reservation", reservations=reservations)
 
@@ -311,6 +291,7 @@ def logout():
     return redirect(url_for("signin"))
 
 
+# All Administrator Helpers
 @app.route("/admin")
 def admin():
     """
@@ -533,6 +514,8 @@ def admin_user(user_id=None):
     return render_template("admin/user.html",page_title="Users",user=user)
 
 
+# All Context Processors
+
 @app.context_processor
 def inject_user():
     """
@@ -571,6 +554,8 @@ def inject_year():
     """
     return {"year": datetime.today().year}
 
+
+# All Local helpers
 
 def get_basket():
     """
@@ -612,6 +597,7 @@ def add_basket_item(product_id,amount=1):
     storeBasket()
     flash("Basket item added")
 
+
 def get_user():
     """
     Return avalible user information based on current cookie.
@@ -640,11 +626,6 @@ def get_user():
     user.pop('basket', None)
 
     return user
-
-
-@app.errorhandler(404)
-def page_not_found(error):
-    return render_template('404.html'), 404
 
 
 def sendToBasket():
@@ -698,6 +679,42 @@ def handleUpload(request):
         flash('file uploaded')
         return filename
     return ""
+
+
+def get_reservations():
+    """
+    returns all user resevations based on current session cookie email.
+    injects resevation calculations and current reservation status
+    """
+    user = get_user()
+    reservations = list(mongo.db.reservations.find({"client_email": user["email"]}))
+
+    # inject calculations & status
+    for reservation in reservations:
+        order_total = 0
+        for product in reservation["products"]:
+            sum = int(product["amount"]) * float(product["price"])
+            product["sum"] = sum
+            order_total += sum
+        reservation["reservation_total"] = order_total
+
+        statuses = ["Not Placed", "Not Confirmed by shop", "Confirmed", "Ready for pickup", "Collected"]
+
+        status = 0
+
+        if reservation["order_date_place"] != 0 and reservation["order_date_confirm"] == 0:
+            status = 1
+
+        if reservation["order_date_confirm"] != 0:
+            status = 2
+
+        reservation["reservation_status"] = statuses[status]
+
+    return reservations
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
 
 
 if __name__ == "__main__":
