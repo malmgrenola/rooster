@@ -17,16 +17,19 @@
             Sale
           </div>
           <!-- Product image-->
-          <img
-            class="card-img-top"
-            src="{{ product.image_url }}"
-            alt="Image of {{ product.name }}"
-          />
+          <a href="{{ url_for('product',product_id=product._id) }}"
+            ><img
+              class="card-img-top"
+              src="{{ product.image_url }}"
+              alt="Image of {{ product.name }}"
+          /></a>
           <!-- Product details-->
           <div class="card-body p-4">
             <div class="text-center">
               <!-- Product name-->
-              <h5 class="fw-bolder">{{ product.name }}</h5>
+              <a href="{{ url_for('product',product_id=product._id) }}"
+                ><h5 class="fw-bolder">{{ product.name }}</h5></a
+              >
               <!-- Product price-->
               {{ product.price }}
             </div>

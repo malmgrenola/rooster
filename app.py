@@ -27,7 +27,7 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 mongo = PyMongo(app)
 
-
+## AWS S3 is used as CDN, this client is the connection when uploading new images
 s3_client = boto3.client(
     's3',
     aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
@@ -44,29 +44,8 @@ def index():
     """
 
     if request.method == "POST":
-        print(request.form)
         if "product_id" in request.form:
-            product = mongo.db.products.find_one({"_id": ObjectId(request.form.get("product_id"))})
-            basket = get_basket()
-
-            index = indexOf(basket,"id",str(product["_id"]))
-            print(10,index)
-            if index >= 0:
-                # Product is already in basket, lets update the quantaty
-                basket[index]["amount"] += 1
-            else:
-                # Product missing in basket, lets add it
-                item = {
-                "id": str(product["_id"]),
-                "name": product["name"],
-                "amount": 1,
-                "price":product["price"]
-                }
-                basket.append(item)
-
-            session["basket"] = basket
-            storeBasket()
-            flash("Basket item added")
+            add_basket_item(request.form.get("product_id"),1)
 
     products = mongo.db.products.find()
 
@@ -87,17 +66,26 @@ def products(category=None):
     """
     Render products for route "/products" and set page title
     """
-    products = mongo.db.products.find()
-    print(10,products)
+
+    category_id = mongo.db.categories.find_one({ "name": { "$eq": category } }).get("_id")
+    products = mongo.db.products.find({ "categories": { "$in": [category_id] } })
+
     return render_template("products.html",page_title="Products", products=products)
 
 
 @app.route('/product/')
-@app.route("/product/<product>")
-def product(product=None):
+@app.route("/product/<product_id>", methods=["GET", "POST"])
+def product(product_id=None):
     """
     Render product for route "/product" and set page title
     """
+
+    if request.method == "POST":
+        if "amount" in request.form:
+            amount = int(request.form.get("amount"))
+
+    product = mongo.db.products.find_one({ "_id": ObjectId(product_id) })
+
     return render_template("product.html",page_title=f'Product {escape(product)}', product=product)
 
 
@@ -109,6 +97,7 @@ def categories():
     categories = mongo.db.categories.find()
     print(categories)
     return render_template("categories.html",page_title="Categories", categories=categories)
+
 
 @app.route("/category/")
 @app.route("/category/<category>")
@@ -131,7 +120,6 @@ def basket():
 
         if "delete" in request.form:
             # Remove product from basket
-            print("del",request.form["delete"])
             index = indexOf(basket,"id",request.form["delete"])
             basket.pop(index)
             session["basket"] = basket
@@ -139,8 +127,6 @@ def basket():
 
         elif "update" in request.form:
             # update amount manually
-            print("update",request.form["update"])
-
             if "input" in request.form:
                 newValue = int(request.form["input"])
                 index = indexOf(basket,"id",request.form["update"])
@@ -148,6 +134,16 @@ def basket():
                     basket[index]["amount"] = newValue
                     session["basket"] = basket
                     storeBasket()
+
+        elif "add" in request.form:
+            product = get_basket_item(request.form.get("product_id"))
+            add_basket_item(request.form.get("product_id"),int(request.form.get("amount")))
+            # newValue = int(request.form["input"])
+            # index = indexOf(basket,"id",request.form["update"])
+            # if newValue > 0:
+            #     basket[index]["amount"] = newValue
+            #     session["basket"] = basket
+            #     storeBasket()
 
         elif "place" in request.form:
             # Create a reservetion with current basket
@@ -483,6 +479,7 @@ def admin_category(category_id=None):
 
     return render_template("admin/category.html",page_title="Category",category=category)
 
+
 @app.route("/admin/products")
 def admin_products():
 
@@ -541,6 +538,7 @@ def admin_product(product_id=None):
 
     return render_template("admin/product.html",page_title="Product",product=product)
 
+
 @app.route("/admin/users")
 def admin_users():
 
@@ -567,6 +565,7 @@ def admin_user(user_id=None):
     if (not user): return redirect(url_for("admin_users"))
 
     return render_template("admin/user.html",page_title="Users",user=user)
+
 
 @app.context_processor
 def get_session():
@@ -598,6 +597,36 @@ def get_basket():
         session["basket"] = []
 
     return session["basket"]
+
+
+def get_basket_item(product_id):
+    basket = get_basket()
+    index = indexOf(basket,"id",product_id)
+    if (index >= 0): return basket[index]
+    return []
+
+
+def add_basket_item(product_id,amount=1):
+    product = mongo.db.products.find_one({"_id": ObjectId(product_id)})
+    basket = get_basket()
+
+    index = indexOf(basket,"id",str(product["_id"]))
+    if index >= 0:
+        # Product is already in basket, lets update the quantaty
+        basket[index]["amount"] += amount
+    else:
+        # Product missing in basket, lets add it
+        item = {
+        "id": str(product["_id"]),
+        "name": product["name"],
+        "amount": amount,
+        "price":product["price"]
+        }
+        basket.append(item)
+
+    session["basket"] = basket
+    storeBasket()
+    flash("Basket item added")
 
 def get_user():
     """
@@ -632,6 +661,10 @@ def get_user():
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
+
+
+def sendToBasket():
+    print("Send to basket was here")
 
 
 def storeBasket():
