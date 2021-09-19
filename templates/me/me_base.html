@@ -1,0 +1,23 @@
+{% extends "base.html" %} {% block content %}
+<section>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col text-center">
+        <h1>
+          Welcome, {{user.name}}
+          <span class="fs-6"
+            >(<a href="{{ url_for('logout')}}">sign out</a>)</span
+          >
+        </h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="container-fluid">
+          {% block me_base %} {% endblock %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

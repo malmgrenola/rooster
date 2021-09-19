@@ -248,35 +248,55 @@ def me():
         return redirect(url_for("me"))
 
     reservations = get_reservations()
-    
+
     return render_template("/me/overview.html",page_title="User",reservations=reservations)
 
 
-@app.route("/me/reservations")
-def reservations():
-    """
-    Render reservations for route "me/reservations" and set page title
-    """
-    user = get_user()
-
-    if not user:
-        return redirect(url_for("signin"))
-
-    reservations = get_reservations()
-
-    return render_template("me/reservations.html",page_title="Reservation", reservations=reservations)
-
-
 @app.route("/me/reservation/")
-@app.route("/me/reservation/<reservation_id>")
+@app.route("/me/reservation/<reservation_id>",methods=['GET','POST'])
 def reservation(reservation_id=0):
     """
     Render reservation for route "/reservation" and set page title
     """
 
-    user = get_user()
+    if request.method == "POST":
+        # Delete button pressed
+        if "delete" in request.form:
+            date_completed = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)}).get("order_date_completed")
+            if date_completed != 0:
+                flash("Can't delete collected order")
+                return redirect(url_for("reservation",reservation_id=reservation_id))
+
+            if date_completed == 0:
+                mongo.db.reservations.delete_one({"_id": ObjectId(reservation_id)})
+                flash("Reservation deleted")
+                return redirect(url_for("me"))
+
+            return redirect(url_for("me"))
+
+        if "place" in request.form:
+            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"order_date_place": datetime.today()}})
+
+            return redirect(url_for("reservation",reservation_id=reservation_id))
+
+        if "set" in request.form:
+            if not "pickup-date-time" in request.form:
+                flash("No valid date")
+
+            d = datetime.strptime(request.form.get("pickup-date-time"), "%Y-%m-%dT%H:%M")
+            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"order_date_pickup": d}})
+            flash("Pickup date set")
+            return redirect(url_for("reservation",reservation_id=reservation_id))
+
+        if "update" in request.form:
+
+            products[index]["amount"] = request.form.get("input")
+            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
+            flash("product amount updated")
 
     reservation = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)})
+
+    reservation = inject_reservation(reservation)
 
     return render_template("me/reservation.html",page_title="reservation", reservation=reservation)
 
@@ -298,6 +318,8 @@ def admin():
     Admin area, redirects to admin_collect by default
     """
 
+    if not confirm_admin(): return redirect(url_for('logout'))
+
     return redirect(url_for("admin_collect"))
 
 
@@ -306,6 +328,9 @@ def admin_collect():
     """
     Admin Collect
     """
+
+    if not confirm_admin(): return redirect(url_for('logout'))
+
     reservations = list(mongo.db.reservations.find())
 
     for reservation in reservations:
@@ -329,6 +354,8 @@ def admin_collect():
 @app.route("/admin/collect/<reservation_id>", methods=['GET','POST'])
 @app.route("/admin/collect/<reservation_id>/<product_id>", methods=['GET','POST'])
 def admin_collect_details(reservation_id=None,product_id=None):
+
+    if not confirm_admin(): return redirect(url_for('logout'))
 
     if request.method == "POST":
 
@@ -388,6 +415,9 @@ def admin_categories():
     Render categories for route "/categories" and set page title
     Categories are already fetched with context providers
     """
+
+    if not confirm_admin(): return redirect(url_for('logout'))
+
     return render_template("admin/categories.html",page_title="Categories")
 
 
@@ -396,6 +426,9 @@ def admin_category(category_id=None):
     """
     Render category from id for route "/category/id" and set page title
     """
+
+    if not confirm_admin(): return redirect(url_for('logout'))
+
     if request.method == "POST":
         if "save" in request.form:
             data = {}
@@ -432,6 +465,8 @@ def admin_category(category_id=None):
 @app.route("/admin/products")
 def admin_products():
 
+    if not confirm_admin(): return redirect(url_for('logout'))
+
     products = list(mongo.db.products.find())
 
     for product in products:
@@ -443,6 +478,8 @@ def admin_products():
 
 @app.route("/admin/product/<product_id>", methods=['GET','POST'])
 def admin_product(product_id=None):
+
+    if not confirm_admin(): return redirect(url_for('logout'))
 
     if request.method == "POST":
 
@@ -491,6 +528,8 @@ def admin_product(product_id=None):
 @app.route("/admin/users")
 def admin_users():
 
+    if not confirm_admin(): return redirect(url_for('logout'))
+
     users = list(mongo.db.users.find())
 
     return render_template("admin/users.html",page_title="Users",users=users)
@@ -498,6 +537,9 @@ def admin_users():
 
 @app.route("/admin/user/<user_id>", methods=['GET','POST'])
 def admin_user(user_id=None):
+
+    if not confirm_admin(): return redirect(url_for('logout'))
+
     if request.method == "POST":
         if "save" in request.form:
             data = {
@@ -621,15 +663,11 @@ def get_user():
 
     # Remove data we don't want to share
     user.pop('password', None)
-    user.pop('isAdmin', None)
+    #user.pop('isAdmin', None)
     user.pop('_id', None)
     user.pop('basket', None)
 
     return user
-
-
-def sendToBasket():
-    print("Send to basket was here")
 
 
 def storeBasket():
@@ -691,26 +729,46 @@ def get_reservations():
 
     # inject calculations & status
     for reservation in reservations:
-        order_total = 0
-        for product in reservation["products"]:
-            sum = int(product["amount"]) * float(product["price"])
-            product["sum"] = sum
-            order_total += sum
-        reservation["reservation_total"] = order_total
-
-        statuses = ["Not Placed", "Not Confirmed by shop", "Confirmed", "Ready for pickup", "Collected"]
-
-        status = 0
-
-        if reservation["order_date_place"] != 0 and reservation["order_date_confirm"] == 0:
-            status = 1
-
-        if reservation["order_date_confirm"] != 0:
-            status = 2
-
-        reservation["reservation_status"] = statuses[status]
+        reservation = inject_reservation(reservation)
 
     return reservations
+
+
+def inject_reservation(reservation):
+    """
+    injects and returns resevation calculations and current reservation status
+    """
+    order_total = 0
+    for product in reservation["products"]:
+        sum = int(product["amount"]) * float(product["price"])
+        product["sum"] = sum
+        order_total += sum
+    reservation["reservation_total"] = order_total
+
+    statuses = ["Not Placed", "Not Confirmed by shop", "Confirmed", "Ready for pickup", "Collected"]
+
+    status = 0
+
+    if reservation["order_date_place"] != 0 and reservation["order_date_confirm"] == 0:
+        status = 1
+
+    if reservation["order_date_confirm"] != 0:
+        status = 2
+
+    reservation["reservation_status_id"] = status
+    reservation["reservation_status"] = statuses[status]
+
+    #reservation["order_date_pickup"] = 0 if reservation["order_date_pickup"] == 0 else reservation["order_date_pickup"].strftime('%Y-%m-%d %H:%M')
+    print(10,reservation["order_date_pickup"])
+    return reservation
+
+
+def confirm_admin():
+    user = get_user()
+    if not user["isAdmin"]:
+        flash('You are not allowed here!')
+    return user["isAdmin"]
+
 
 @app.errorhandler(404)
 def page_not_found(error):

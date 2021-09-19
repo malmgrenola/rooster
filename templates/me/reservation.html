@@ -1,60 +1,121 @@
-{% extends "base.html" %} {% block content %}
-<!-- Header-->
-<header class="bg-dark py-5">
-  <div class="container px-4 px-lg-5 my-5">
-    <div class="text-center text-white">
-      <h1 class="display-4 fw-bolder">Reservation</h1>
-    </div>
-  </div>
-</header>
-<!-- Section-->
-<section class="py-5">
-  <div class="container px-4 px-lg-5 mt-5">
-    <div class="row justify-content-center">
-      <div class="col mb-5">
-        <a href="/me/reservations">Back to Reservations</a>
-        <h2>Reservation details</h2>
-        <p><strong>Order Placed:</strong> {{reservation.order_date_place}}</p>
-        <p>
-          <strong>Pickup scheduled:</strong> {{reservation.order_date_pickup}}
-        </p>
-        <p>
-          <strong>Pickup confirmed by us:</strong>
-          {{reservation.order_date_confirm}}
-        </p>
-        <p>
-          <strong>Customer:</strong>
-          {{ reservation.client_name }} (<a
-            href="mailto://{{ reservation.client_email }}"
-            >{{ reservation.client_email }}</a
-          >)
-        </p>
+{% extends "me/me_base.html" %} {% block me_base %}
+<div class="row justify-content-center">
+  <div class="col col-lg-3">
+    <h2>Details</h2>
+    <div class="mb-3 bg-dark p-2 fs-6">
+      <p>
+        {{ 'Order not placed (' ~
+        reservation.order_date_last_progress.strftime('%Y-%m-%d') ~ ')' if
+        reservation.order_date_place == 0 else 'Placed order' }}
+      </p>
+      <p>
+        <strong>Pickup scheduled</strong>
+      </p>
+      {% if reservation.reservation_status_id < 2 %}
+      <form
+        class=""
+        action="{{url_for('reservation',reservation_id=reservation._id)}}"
+        method="post"
+      >
+        <input
+          type="datetime-local"
+          id="pickup-date-time"
+          name="pickup-date-time"
+          value="{{ '0' if reservation.order_date_pickup == 0 else
+            reservation.order_date_pickup.strftime('%Y-%m-%dT%H:%M') }}"
+          min="2018-06-07T00:00"
+          required
+        /><button
+          class="btn btn-sm btn-outline-light text-nowrap m-1"
+          type="submit"
+          id="set"
+          name="set"
+        >
+          Set date
+        </button>
+      </form>
+      {% else %} {{ '-' if reservation.order_date_pickup == 0 else
+      reservation.order_date_pickup.strftime('%Y-%m-%d %H:%M') }} {% if
+      reservation.reservation_status_id > 0 %} {% endif %}
 
-        <h2>Products</h2>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Product</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for product in reservation["products"] %}
-            <tr>
-              <td>{{product.name}}</td>
-              <td>
-                {{product.amount}} <i class="bi bi-dash-circle-fill"></i>
-                <i class="bi bi-plus-circle-fill"></i>
-                <i class="bi bi-trash-fill"></i>
-              </td>
-              <td>$0</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+      <p>
+        {% if reservation.reservation_status_id == 1 %}
+        <strong>Pickup is not Confirmed by shop</strong>
+        {% endif %} {% if reservation.reservation_status_id == 2 %}
+        <strong>Pickup is confirmed by shop</strong>
+        {% endif %} {% if reservation.reservation_status_id == 3 %}
+        <strong>Ready for pickup</strong>
+        {% endif %} {% if reservation.reservation_status_id == 4 %}
+        <strong>Collected by customer</strong>
+        {% endif %}
+      </p>
+      {% endif %}
     </div>
   </div>
-</section>
+  <div class="col col-lg-9">
+    <h2>Products</h2>
+    {% include 'me/navbar.html' %}
+    <table class="table table-sm table-dark">
+      <thead>
+        <tr>
+          <th scope="col">Product</th>
+          <th scope="col" class="text-end">Amount</th>
+          <th scope="col" class="text-end">Price</th>
+          <th scope="col" class="text-end">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in reservation["products"] %}
+        <tr>
+          <td>
+            <a href="{{url_for('product',product_id=product.id)}}"
+              >{{product.name}}</a
+            >
+          </td>
+          <td class="text-end">
+            <div class="input-group">
+              <input
+                id="amount-{{product.id}}"
+                name="input"
+                type="number"
+                min="1"
+                max="30"
+                class="form-control basket-on-enter fs-6"
+                placeholder="0"
+                aria-label="amount"
+                value="{{product.amount}}"
+              />
+              <button
+                id="update-{{product.id}}"
+                name="update"
+                value="{{product.id}}"
+                class="btn btn-sm btn-outline-light basket-update fs-6"
+                type="submit"
+              >
+                update
+              </button>
+              <button
+                id="del-{{product.id}}"
+                name="delete"
+                value="{{product.id}}"
+                class="btn btn-sm btn-outline-light fs-6"
+                type="submit"
+              >
+                <i class="bi bi-trash-fill"></i>
+              </button>
+            </div>
+          </td>
+          <td class="text-end">$ {{product.price}}</td>
+          <td class="text-end">$ {{product.sum}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td colspan="4" class="text-end">
+            <strong>Total: </strong>$ {{reservation.reservation_total}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}
