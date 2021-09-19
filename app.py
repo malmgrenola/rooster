@@ -527,33 +527,49 @@ def admin_user(user_id=None):
             mongo.db.users.update_one({"_id": ObjectId(user_id)}, {"$set": data})
             flash("User saved")
 
-
     user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
-
     if (not user): return redirect(url_for("admin_users"))
 
     return render_template("admin/user.html",page_title="Users",user=user)
 
 
 @app.context_processor
-def get_session():
+def inject_user():
     """
-    Session and genaral information avalible on all pages
+    inject current user information
     """
+    return {"user": get_user()}
 
-    user = get_user()
-    basket = get_basket()
+
+@app.context_processor
+def inject_categories():
+    """
+    inject all categories
+    """
     categories = list(mongo.db.categories.find())
+    return {"categories": categories}
 
+
+@app.context_processor
+def inject_basket():
+    """
+    inject basket and the total items count in basket
+    """
+
+    basket = get_basket()
     basketItems = 0
     for product in basket:
         basketItems += int(product["amount"])
 
-    # print(basketItems)
-    # for category in categories:
-    #     category["name"] = category["name"].upper()
+    return {"basket": basket,"basketItems": basketItems}
 
-    return dict(user=user,basket=basket,basketItems=basketItems,categories=categories)
+
+@app.context_processor
+def inject_year():
+    """
+    inject current year
+    """
+    return {"year": datetime.today().year}
 
 
 def get_basket():
