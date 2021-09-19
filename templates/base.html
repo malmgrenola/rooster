@@ -53,7 +53,16 @@
       </div>
       {% endfor %} {% endif %} {% endwith %}
     </section>
-    {% block content %} {% endblock %} {% include '/includes/footer.html' %}
+    {% block content %} {% endblock %}
+
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">
+          Copyright &copy; Purple Rooster Farmshop {{ year }}
+        </p>
+      </div>
+    </footer>
     <!-- Bootstrap core JS-->
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
