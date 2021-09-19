@@ -59,7 +59,7 @@
       <thead>
         <tr>
           <th scope="col">Product</th>
-          <th scope="col" class="text-end">Amount</th>
+          <th scope="col">Amount</th>
           <th scope="col" class="text-end">Price</th>
           <th scope="col" class="text-end">Total</th>
         </tr>
@@ -72,38 +72,46 @@
               >{{product.name}}</a
             >
           </td>
-          <td class="text-end">
-            <div class="input-group">
-              <input
-                id="amount-{{product.id}}"
-                name="input"
-                type="number"
-                min="1"
-                max="30"
-                class="form-control basket-on-enter fs-6"
-                placeholder="0"
-                aria-label="amount"
-                value="{{product.amount}}"
-              />
-              <button
-                id="update-{{product.id}}"
-                name="update"
-                value="{{product.id}}"
-                class="btn btn-sm btn-outline-light basket-update fs-6"
-                type="submit"
-              >
-                update
-              </button>
-              <button
-                id="del-{{product.id}}"
-                name="delete"
-                value="{{product.id}}"
-                class="btn btn-sm btn-outline-light fs-6"
-                type="submit"
-              >
-                <i class="bi bi-trash-fill"></i>
-              </button>
-            </div>
+          <td>
+            {% if reservation.reservation_status_id < 2 %}
+            <form
+              id="form-reservation-{{product.id}}"
+              method="POST"
+              action="{{ url_for('reservation',reservation_id=reservation._id, product_id=product.id) }}"
+            >
+              <div class="input-group">
+                <input
+                  id="amount-{{product.id}}"
+                  name="input"
+                  type="number"
+                  min="1"
+                  max="30"
+                  class="form-control basket-on-enter fs-6"
+                  placeholder="0"
+                  aria-label="amount"
+                  value="{{product.amount}}"
+                />
+                <button
+                  id="update-{{product.id}}"
+                  name="update"
+                  value="{{product.id}}"
+                  class="btn btn-sm btn-outline-light basket-update fs-6"
+                  type="submit"
+                >
+                  update
+                </button>
+                <button
+                  id="rem-{{product.id}}"
+                  name="remove"
+                  value="{{product.id}}"
+                  class="btn btn-sm btn-outline-light fs-6"
+                  type="submit"
+                >
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+              </div>
+            </form>
+            {% else %} {{product.amount}} {% endif %}
           </td>
           <td class="text-end">$ {{product.price}}</td>
           <td class="text-end">$ {{product.sum}}</td>

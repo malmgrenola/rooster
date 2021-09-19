@@ -128,7 +128,6 @@ def basket():
                 return redirect(url_for("signin"))
             user_id = mongo.db.users.find_one({ "email": { "$eq": user["email"] } }).get("_id")
 
-            print(20,user)
             reservation = {
             "client_id": user_id,
             "client_name": user["name"],
@@ -142,7 +141,8 @@ def basket():
             "products": basket
             }
             id = mongo.db.reservations.insert_one(reservation).inserted_id
-
+            session["basket"] = []
+            flash("Your basket is now prepared for a collect")
             return redirect(url_for("reservation",reservation_id=id))
 
         else:
@@ -254,7 +254,8 @@ def me():
 
 @app.route("/me/reservation/")
 @app.route("/me/reservation/<reservation_id>",methods=['GET','POST'])
-def reservation(reservation_id=0):
+@app.route("/me/reservation/<reservation_id>/<product_id>",methods=['POST'])
+def reservation(reservation_id=0,product_id=0):
     """
     Render reservation for route "/reservation" and set page title
     """
@@ -289,10 +290,20 @@ def reservation(reservation_id=0):
             return redirect(url_for("reservation",reservation_id=reservation_id))
 
         if "update" in request.form:
-
-            products[index]["amount"] = request.form.get("input")
+            products = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)}).get("products")
+            index = indexOf(products,"id",product_id)
+            products[index]["amount"] = int(request.form.get("input"))
             mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
             flash("product amount updated")
+            return redirect(url_for("reservation",reservation_id=reservation_id))
+
+        if "remove" in request.form:
+            products = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)}).get("products")
+            index = indexOf(products,"id",product_id)
+            products.pop(index)
+            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
+            flash("product removed")
+            return redirect(url_for("reservation",reservation_id=reservation_id))
 
     reservation = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)})
 
@@ -758,8 +769,6 @@ def inject_reservation(reservation):
     reservation["reservation_status_id"] = status
     reservation["reservation_status"] = statuses[status]
 
-    #reservation["order_date_pickup"] = 0 if reservation["order_date_pickup"] == 0 else reservation["order_date_pickup"].strftime('%Y-%m-%d %H:%M')
-    print(10,reservation["order_date_pickup"])
     return reservation
 
 
