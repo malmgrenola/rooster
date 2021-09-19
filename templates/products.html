@@ -26,10 +26,7 @@
       <!-- Product actions-->
       <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
         <div class="text-center">
-          <form
-            action="{{ url_for('product',product_id=product._id) }}"
-            method="post"
-          >
+          <form action="{{ url_for('basket') }}" method="post">
             <input
               id="product_id"
               name="product_id"
@@ -38,6 +35,8 @@
             />
             <input
               class="btn btn-outline-light mt-auto"
+              id="add-{{product.id}}"
+              name="add"
               type="submit"
               value="Add to Basket"
             />

@@ -137,13 +137,9 @@ def basket():
 
         elif "add" in request.form:
             product = get_basket_item(request.form.get("product_id"))
-            add_basket_item(request.form.get("product_id"),int(request.form.get("amount")))
-            # newValue = int(request.form["input"])
-            # index = indexOf(basket,"id",request.form["update"])
-            # if newValue > 0:
-            #     basket[index]["amount"] = newValue
-            #     session["basket"] = basket
-            #     storeBasket()
+            amount = int(request.form.get("amount")) if "amount" in request.form else 1
+
+            add_basket_item(request.form.get("product_id"),amount)
 
         elif "place" in request.form:
             # Create a reservetion with current basket

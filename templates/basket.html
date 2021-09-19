@@ -1,20 +1,12 @@
 {% extends "base.html" %} {% block content %}
-<!-- Header-->
-<header class="bg-dark py-5">
-  <div class="container px-4 px-lg-5 my-5">
-    <div class="text-center text-white">
-      <h1 class="display-4 fw-bolder">Basket</h1>
-    </div>
-  </div>
-</header>
 <!-- Section-->
 <section class="py-5">
-  <div class="container px-4 px-lg-5 mt-5">
+  <div class="container px-4 px-lg-5 mt-5 text-light">
     <form action="{{ url_for('basket') }}" method="post">
       <div class="row justify-content-center">
         <div class="col mb-5">
           {% if basket %}
-          <table class="table">
+          <table class="table table-sm table-dark">
             <thead>
               <tr>
                 <th scope="col">Product</th>
@@ -24,9 +16,17 @@
             <tbody>
               {% for product in basket %}
               <tr>
-                <td>{{product.name}}</td>
                 <td>
-                  <form id="form-{{product.id}}" method="POST" action="/basket">
+                  <a href="{{ url_for('product',product_id=product.id) }}"
+                    >{{product.name}}</a
+                  >
+                </td>
+                <td>
+                  <form
+                    id="form-{{product.id}}"
+                    method="POST"
+                    action="{{ url_for('basket') }}"
+                  >
                     <div class="input-group">
                       <input
                         id="amount-{{product.id}}"
@@ -43,7 +43,7 @@
                         id="update-{{product.id}}"
                         name="update"
                         value="{{product.id}}"
-                        class="btn btn-outline-secondary basket-update"
+                        class="btn btn-outline-light basket-update"
                         type="submit"
                       >
                         update
@@ -52,7 +52,7 @@
                         id="del-{{product.id}}"
                         name="delete"
                         value="{{product.id}}"
-                        class="btn btn-outline-secondary"
+                        class="btn btn-outline-light"
                         type="submit"
                       >
                         <i class="bi bi-trash-fill"></i>
@@ -65,7 +65,7 @@
             </tbody>
           </table>
           {% else %}
-          <p>No products in basket.</p>
+          <p>Your basket is empty!</p>
           <p>Here is a Lion!</p>
           <img
             src="https://assets.puzzlefactory.pl/puzzle/205/569/original.webp"
@@ -79,7 +79,7 @@
       >
         <div class="col mb-5">
           <input
-            class="btn btn-outline-dark mt-auto"
+            class="btn btn-outline-light mt-auto"
             type="submit"
             name="place"
             value="Pre-order and collect"
