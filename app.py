@@ -9,7 +9,6 @@ from bson.decimal128 import Decimal128, create_decimal128_context
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-import urllib
 from datetime import datetime
 import boto3
 from botocore.exceptions import ClientError
@@ -211,9 +210,7 @@ def signin():
 
                         session["user"] = request.form.get("email").lower()
                         if "basket" in existing_user:
-                            print(300,existing_user)
                             session["basket"] = existing_user["basket"]
-                            print(301,session)
                         flash("Welcome, {}".format(existing_user["name"]))
                         return redirect(url_for("me"))
             else:
@@ -660,7 +657,7 @@ def get_user():
     if not "user" in session:
         return {}
 
-    email = urllib.parse.unquote(session["user"])
+    email = session["user"]
 
     if not email:
         return {}
