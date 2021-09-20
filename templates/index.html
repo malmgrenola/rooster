@@ -20,7 +20,9 @@
               ><h5 class="fw-bolder">{{ product.name }}</h5></a
             >
             <!-- Product description-->
-            <p class="text-tiny">{{ product.description }}</p>
+            <p class="text-tiny">
+              {{ product.description|truncate(200, True, '...') }}
+            </p>
             <!-- Product price-->
             $ {{ product.price }}
           </div>
