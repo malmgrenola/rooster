@@ -345,7 +345,8 @@ def admin_collect():
     """
 
     if not confirm_admin(): return redirect(url_for('logout'))
-    reservations = list(mongo.db.reservations.find(filter={},sort=[( "order_date_pickup", -1 )]))
+    list(mongo.db.reservations.find(filter={},sort=[( "order_date_pickup", -1 )]))
+    reservations = list(mongo.db.reservations.find())
 
     for reservation in reservations:
         order_value = 0
@@ -366,7 +367,6 @@ def admin_collect():
 
 
 @app.route("/admin/collect/<reservation_id>", methods=['GET','POST'])
-@app.route("/admin/collect/<reservation_id>/<product_id>", methods=['GET','POST'])
 def admin_collect_details(reservation_id=None,product_id=None):
 
     if not confirm_admin(): return redirect(url_for('logout'))
@@ -398,15 +398,16 @@ def admin_collect_details(reservation_id=None,product_id=None):
             flash("click & collect pickup canceled")
             return redirect(url_for("admin_collect_details",reservation_id=reservation_id))
 
+        product_id = request.args.get('product_id')
         products = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)})["products"]
-        index = indexOf(products,"id",ObjectId(product_id))
+        index = indexOf(products,"id",product_id)
 
         if "delete" in request.form:
             products.pop(index)
             mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
             flash("product removed")
 
-        elif "update" in request.form:
+        if "update" in request.form:
 
             products[index]["amount"] = request.form.get("input")
             mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})

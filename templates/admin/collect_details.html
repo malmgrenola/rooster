@@ -11,13 +11,25 @@
     <thead>
       <tr>
         <th scope="col" colspan="2">Order Information</th>
-        <th scope="col" colspan="2">Dates</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <th scope="row" class="w-25">Order number</th>
-        <td>{{details._id}}</td>
+        <th scope="row" class="w-25">Order Placed</th>
+        <td>
+          {% if details.order_placed != 0 %}<i class="far fa-check-square"></i
+          >{% else %}<i class="far fa-square"></i>{% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">Name</th>
+        <td>{{details.client_name}}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="w-25">Email</th>
+        <td>{{details.client_email}}</td>
+      </tr>
+      <tr>
         <th scope="row" class="w-25">Pickup Date</th>
         <td>
           <input
@@ -29,54 +41,20 @@
           />
         </td>
       </tr>
-      <tr>
-        <th scope="row" class="w-25">Name</th>
-        <td>{{details.client_name}}</td>
-        <th scope="row" class="w-25">Order Date</th>
-        <td>
-          {% if details.order_date_place != 0 %}{{details.order_date_place}}{%
-          else %}Not ordered{% endif %}
-        </td>
-      </tr>
-      <tr>
-        <th scope="row" class="w-25">Email</th>
-        <td>{{details.client_email}}</td>
-        <th scope="row" class="w-25">Pickup Confirmed Date</th>
-        <td>
-          {% if details.order_date_confirm != 0 %}<i
-            class="fas fa-check fs-3 m-2"
-          ></i
-          ><button
-            class="btn btn-outline-light btn-sm"
-            type="submit"
-            id="cancel"
-            name="cancel"
-          >
-            Cancel</button
-          >{% else %}
-          <button
-            class="btn btn-outline-light btn-sm"
-            type="submit"
-            id="confirm"
-            name="confirm"
-          >
-            Confirm Pickup
-          </button>
-          {% endif %}
-        </td>
-      </tr>
+
       <tr>
         <th scope="row" class="w-25">Order comment</th>
         <td>
-          <input
+          <textarea
             type="input"
             id="order_comment"
             name="order_comment"
-            value="{{details.order_comment}}"
-          />
+            rows="2"
+            cols="50"
+          >
+{{details.order_comment}}</textarea
+          >
         </td>
-        <th scope="row" class="w-25">Last_progress</th>
-        <td>{{details.order_date_last_progress}}</td>
       </tr>
     </tbody>
   </table>
