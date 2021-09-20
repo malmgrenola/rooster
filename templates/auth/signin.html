@@ -1,8 +1,9 @@
 {% extends "base.html" %} {% block content %}
 <div class="container px-4 px-lg-5 mt-5">
-  <div
-    class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
-  >
+  <div class="row text-center">
+    <div class="col"><h1>Sign in</h1></div>
+  </div>
+  <div class="row row-cols-lg-3 justify-content-center bg-dark p-4">
     <form method="POST" action="{{ url_for('signin') }}">
       <!--Email-->
       <div class="mb-3">
@@ -31,10 +32,10 @@
         />
       </div>
       <!--Submit-->
-      <button type="submit" class="btn btn-primary">Sign in</button>
+      <button type="submit" class="btn btn-outline-light w-100">Sign in</button>
       <hr />
       <p>Are you a new costumer?</p>
-      <a href="{{ url_for('register') }}" class="btn btn-secondary w-100"
+      <a href="{{ url_for('register') }}" class="btn btn-light w-100"
         >Sign up here</a
       >
     </form>

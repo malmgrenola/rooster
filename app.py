@@ -188,6 +188,7 @@ def register():
         # put user in a 'session' cookie
         session["email"] = request.form.get("email").lower()
         flash("Registration Successful!")
+        return redirect(url_for("signin"))
 
 
     return render_template("/auth/register.html",page_title="Register")
