@@ -39,7 +39,8 @@ s3 = boto3.resource('s3')
 @app.route("/", methods=["GET", "POST"])
 def index():
     """
-    Render index for route "/", set page title and display index products
+    Render index for route "/", set page title and display index products in a random order
+    Handle add to basket post actions
     """
 
     if request.method == "POST":
@@ -51,19 +52,10 @@ def index():
     return render_template("index.html", page_title="Home", products=products)
 
 
-@app.route("/s")
-def search():
-    """
-    Render search for route "/s" and set page title to query
-    """
-    return render_template("search.html",page_title="Search")
-
-
-@app.route("/products")
 @app.route("/products/<category>")
 def products(category=None):
     """
-    Render products for route "/products" and set page title
+    Render products and categories for route "/products" and set page title
     """
 
     category = mongo.db.categories.find_one({ "name": { "$eq": category } })
@@ -73,11 +65,11 @@ def products(category=None):
     return render_template("products.html",page_title=category["name"], products=products,category=category)
 
 
-@app.route('/product/')
 @app.route("/product/<product_id>", methods=["GET", "POST"])
 def product(product_id=None):
     """
-    Render product for route "/product" and set page title
+    Render product with product_id for route "/product/product_id" and set page title
+    Handle add to basket with selected amount
     """
 
     if request.method == "POST":
@@ -85,14 +77,13 @@ def product(product_id=None):
             amount = int(request.form.get("amount"))
 
     product = mongo.db.products.find_one({ "_id": ObjectId(product_id) })
-
     return render_template("product.html",page_title=product["name"], product=product)
 
 
 @app.route("/basket", methods=["GET", "POST"])
 def basket():
     """
-    Render basket & button handlers for basket page
+    Render basket & button handlers for basket page and set page title
     """
 
     basket = get_basket()
@@ -249,11 +240,12 @@ def me():
     return render_template("/me/overview.html",page_title="Me",reservations=reservations)
 
 
-@app.route("/me/reservation/")
 @app.route("/me/reservation/<reservation_id>",methods=['GET','POST'])
 def reservation(reservation_id=0):
     """
-    Render reservation for route "/reservation" and set page title
+    Render reservation for route "/reservation/reservation_id" and set page title
+    handle all button post actions on page
+    inject reservation calculations before render template
     """
 
     if request.method == "POST":
@@ -312,7 +304,10 @@ def reservation(reservation_id=0):
 
 @app.route("/logout")
 def logout():
-    # remove user from session cookie
+    """
+    remove user from session cookie and redirects to sign in
+    """
+
     session.pop("user")
     session.pop("basket")
     flash("You have been signed out")
@@ -334,7 +329,7 @@ def admin():
 @app.route("/admin/collect")
 def admin_collect():
     """
-    Admin Collect
+    Admin click and Collect list
     """
 
     if not confirm_admin(): return redirect(url_for('logout'))
@@ -359,7 +354,10 @@ def admin_collect():
 
 @app.route("/admin/collect/<reservation_id>", methods=['GET','POST'])
 def admin_collect_details(reservation_id=None):
-
+    """
+    Admin click and Collect detailed view based on reservation_id
+    handles post actions
+    """
     if not confirm_admin(): return redirect(url_for('logout'))
 
     if request.method == "POST":
@@ -410,7 +408,7 @@ def admin_collect_details(reservation_id=None):
 def admin_categories():
     """
     Render categories for route "/categories" and set page title
-    Categories are already fetched with context providers
+    Categories are already fetched with context providers so no db lookup is needed
     """
 
     if not confirm_admin(): return redirect(url_for('logout'))
@@ -422,6 +420,7 @@ def admin_categories():
 def admin_category(category_id=None):
     """
     Render category from id for route "/category/id" and set page title
+    handles post actions
     """
 
     if not confirm_admin(): return redirect(url_for('logout'))
@@ -452,7 +451,11 @@ def admin_category(category_id=None):
 
 @app.route("/admin/products")
 def admin_products():
-
+    """
+    Render admin products list and set page title
+    handles post actions
+    injects product categories
+    """
     if not confirm_admin(): return redirect(url_for('logout'))
 
     products = list(mongo.db.products.find())
@@ -466,7 +469,10 @@ def admin_products():
 
 @app.route("/admin/product/<product_id>", methods=['GET','POST'])
 def admin_product(product_id=None):
-
+    """
+    Render admin product from id for route "/admin/product/product_id and set page title
+    handles post actions
+    """
     if not confirm_admin(): return redirect(url_for('logout'))
 
     if request.method == "POST":
@@ -517,7 +523,9 @@ def admin_product(product_id=None):
 
 @app.route("/admin/users")
 def admin_users():
-
+    """
+    Render admin users list and set page title
+    """
     if not confirm_admin(): return redirect(url_for('logout'))
 
     users = list(mongo.db.users.find())
@@ -527,7 +535,10 @@ def admin_users():
 
 @app.route("/admin/user/<user_id>", methods=['GET','POST'])
 def admin_user(user_id=None):
-
+    """
+    Render admin user from user_id and set page title
+    handles post actions
+    """
     if not confirm_admin(): return redirect(url_for('logout'))
 
     if request.method == "POST":
@@ -604,6 +615,9 @@ def get_basket():
 
 
 def get_basket_item(product_id):
+    """
+    get basket from session and find a specific item based on product id
+    """
     basket = get_basket()
     index = indexOf(basket,"id",product_id)
     if (index >= 0): return basket[index]
@@ -611,6 +625,9 @@ def get_basket_item(product_id):
 
 
 def add_basket_item(product_id,amount=1):
+    """
+    get basket from session and add a specific item based on product id and amount
+    """
     product = mongo.db.products.find_one({"_id": ObjectId(product_id)})
     basket = get_basket()
 
@@ -687,6 +704,9 @@ def indexOf(array,key,value):
 
 
 def getDateTime(timestamp):
+    """
+    return timestamp for int or timestamp
+    """
     if (timestamp != 0):
         return timestamp.strftime('%Y-%m-%d %H:%M')
 
@@ -694,6 +714,10 @@ def getDateTime(timestamp):
 
 
 def handleUpload(request):
+    """
+    handle image uploads and post them on AWS S3 Bucket
+    return the filename if all goes well
+    """
     if 'image' not in request.files:
         flash('No file')
         return ""
@@ -755,6 +779,9 @@ def inject_basket(basket):
 
 
 def confirm_admin():
+    """
+    Confirm if user is admin and returns Boolean of the result
+    """
     user = get_user()
     if not user["isAdmin"]:
         flash('You are not allowed here!')
@@ -763,6 +790,9 @@ def confirm_admin():
 
 @app.errorhandler(404)
 def page_not_found(error):
+    """
+    Return a styled Error 404 page
+    """
     return render_template('404.html'), 404
 
 
