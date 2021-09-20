@@ -483,7 +483,7 @@ def admin_product(product_id=None):
             mongo.db.products.update_one({"_id": ObjectId(product_id)}, {"$set": data})
             flash("Product details saved")
 
-            return redirect(url_for("admin_products"))
+            return redirect(url_for("admin_product",product_id=product_id))
 
         if "delete" in request.form:
             mongo.db.products.delete_one({"_id": ObjectId(product_id)})
