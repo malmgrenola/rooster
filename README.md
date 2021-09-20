@@ -4,7 +4,7 @@ The local farm shop site that promotes their products online with the ability to
 
 Live site location:
 
-[Purple Rooster Farm Shop Website](http://purple-rooster.herokuapp.com/)
+[Purple Rooster Farm Shop Website](https://purple-rooster.herokuapp.com/)
 
 ![badge](https://img.shields.io/w3c-validation/html?style=plastic&targetUrl=https%3A%2F%2Fpurple-rooster.herokuapp.com)
 
@@ -87,6 +87,7 @@ Each page includes a footer element containing copyright information about the s
 - Administrate products - CRUD
 - Administrate categories - CRUD
 - Administrate reservations - CRUD
+- Upload product images to external CDN for use on website.
 
 #### Database model
 
@@ -189,7 +190,7 @@ In this section, all of the languages, frameworks, libraries, and any other tool
   - Used to layout the site.
 - [Javascript](https://developer.mozilla.org/en/JavaScript)
   - Used to handle site code logic and API integrations
-- [Python+Flask](#)
+- [Python+Flask](https://flask.palletsprojects.com/en/2.0.x/)
   - used to render site and connect to database
 - [MongoDB](https://www.mongodb.com/)
   - Used to store all data.
@@ -307,10 +308,9 @@ Site CSS should return no errors or warnings.
 Site is deployed to https://purple-rooster.herokuapp.com/ using [Heruko](https://heruko.com).
 
 Heruko is connected to the Github repository with automatic deploy from the branch `main`.
+Every push or merge to main will trigger a new deploy.
 
-`pip3 freeze > requirements.txt`
-
-Every new commit triggers a deploy.
+make sure you run `pip3 freeze > requirements.txt` for all dependecies used.
 
 ## Development
 
@@ -337,10 +337,6 @@ The template shop-homepage used on this site is from [Start Bootstrap](https://s
 The photos used in this site were obtained from:
 
 - [daylesford.com](https://www.daylesford.com/online-shop/)
-- [Lion image](https://puzzlefactory.pl/sv/pussel/spela/fe/205569-animated-lion)
-- https://www.canstockphoto.se/rooster-skiss-34836572.html
-- https://www.rawpixel.com/image/2603952
-- https://www.rawpixel.com/image/2453127/free-illustration-png-apple-fruit
 -
 
 ### Acknowledgements
@@ -349,4 +345,3 @@ The photos used in this site were obtained from:
 - https://www.chromium.org/developers/design-documents/create-amazing-password-forms
 - https://farmorslycka.se/en/farmshop/
 - https://www.beckettsfarm.co.uk/farm-shop/click-and-collect/
-- https://farmshop.lospoblanos.com/cart
