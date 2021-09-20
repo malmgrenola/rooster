@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
-<div class="container px-4 px-lg-5 mt-5">
+<div class="container-fluid  p-0 m-1">
   <div class="row">
-    <div class="col text-center">
+    <div class="col text-center m-1">
       <h1>
         Welcome, {{user.name}}
         <span class="fs-6"
@@ -12,7 +12,7 @@
   </div>
   <div class="row">
     <div class="col">
-      <div class="container-fluid">
+      <div class="container-fluid p-0 m-0">
         {% block me_base %} {% endblock %}
       </div>
     </div>

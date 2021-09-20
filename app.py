@@ -136,11 +136,7 @@ def basket():
             "client_name": user["name"],
             "client_email": user["email"],
             "order_comment": "",
-            "order_date_confirm": 0,
-            "order_date_last_progress": datetime.today(),
             "order_date_pickup": 0,
-            "order_date_place": 0,
-            "order_date_completed":0,
             "order_placed": False,
             "products": basket
             }
@@ -264,15 +260,14 @@ def reservation(reservation_id=0):
 
         # Delete button pressed
         if "delete" in request.form:
-            date_completed = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)}).get("order_date_completed")
-            if date_completed != 0:
+            order_placed = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)}).get("order_placed")
+            if order_placed:
                 flash("Can't delete collected order")
                 return redirect(url_for("reservation",reservation_id=reservation_id))
 
-            if date_completed == 0:
+            if not order_placed:
                 mongo.db.reservations.delete_one({"_id": ObjectId(reservation_id)})
                 flash("Reservation deleted")
-                return redirect(url_for("me"))
 
             return redirect(url_for("me"))
 
@@ -358,7 +353,6 @@ def admin_collect():
             order_value += sum
         reservation["order_value"] = order_value
         reservation["order_item_count"] = order_item_count
-        reservation["order_date_place"] = getDateTime(reservation["order_date_place"])
         reservation["order_date_pickup"] = getDateTime(reservation["order_date_pickup"])
 
     return render_template("admin/collect.html",page_title="Click & Collect",reservations=reservations)
@@ -381,19 +375,6 @@ def admin_collect_details(reservation_id=None,product_id=None):
             mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": data})
             flash("Changes saved")
 
-            return redirect(url_for("admin_collect_details",reservation_id=reservation_id))
-
-        if "confirm" in request.form:
-            flash("click & collect pickup confirmed")
-            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"order_date_confirm": datetime.today()}})
-            return redirect(url_for("admin_collect_details",reservation_id=reservation_id))
-
-        if "cancel" in request.form:
-            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {
-            "$set": {
-            "order_date_confirm": 0
-            }})
-            flash("click & collect pickup canceled")
             return redirect(url_for("admin_collect_details",reservation_id=reservation_id))
 
         product_id = request.args.get('product_id')
@@ -748,19 +729,6 @@ def inject_reservation(reservation):
         product["sum"] = sum
         order_total += sum
     reservation["reservation_total"] = order_total
-
-    statuses = ["Not Placed", "Not Confirmed by shop", "Confirmed", "Ready for pickup", "Collected"]
-
-    status = 0
-
-    if reservation["order_date_place"] != 0 and reservation["order_date_confirm"] == 0:
-        status = 1
-
-    if reservation["order_date_confirm"] != 0:
-        status = 2
-
-    reservation["reservation_status_id"] = status
-    reservation["reservation_status"] = statuses[status]
 
     return reservation
 

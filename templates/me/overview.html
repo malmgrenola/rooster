@@ -1,7 +1,7 @@
 {% extends "me/me_base.html" %} {% block me_base %} {% if user %}
-<div class="container px-4 px-lg-5 mt-5">
+<div class="container px-lg-5 mt-5">
   <div class="row justify-content-center">
-    <div class="col col-lg-3">
+    <div class="col-12 col-lg-3">
       <h2>
         Your details
       </h2>
@@ -26,7 +26,7 @@
         <!--Submit-->
       </form>
     </div>
-    <div class="col col-lg-9">
+    <div class="col-12 col-lg-9">
       <h2>
         Click & Collect
       </h2>
@@ -40,34 +40,31 @@
       <table class="table table-sm table-dark">
         <thead>
           <tr>
-            <th scope="col">Confirmation number</th>
-            <th scope="col">Expected Pickup Date</th>
-            <th scope="col">Status</th>
-            <th scope="col">Date Placed</th>
+            <th scope="col" class="text-center">Placed</th>
+            <th scope="col">
+              Expected Pickup Date
+            </th>
+
             <th scope="col" class="text-end">Value</th>
           </tr>
         </thead>
         <tbody>
           {% for reservation in reservations %}
           <tr>
-            <td class="text-tiny">
+            <td class="text-center">
+              {% if reservation.order_placed %}<i
+                class="far fa-check-square"
+              ></i
+              >{% else %}<i class="far fa-square"></i>{% endif %}
+            </td>
+            <td>
               <a
                 href="{{ url_for('reservation',reservation_id=reservation._id ) }}"
-                >{{ 'Not placed' if not reservation.order_placed else 'Placed
-                order' }}</a
+                >{{ '-' if reservation.order_date_pickup == 0 else
+                reservation.order_date_pickup.strftime('%Y-%m-%d %H:%M') }}</a
               >
             </td>
-            <td>
-              {{ '-' if reservation.order_date_pickup == 0 else
-              reservation.order_date_pickup.strftime('%Y-%m-%d') }}
-            </td>
-            <td>
-              {{ reservation.reservation_status }}
-            </td>
-            <td>
-              {{ '-' if reservation.order_date_place == 0 else
-              reservation.order_date_place.strftime('%Y-%m-%d') }}
-            </td>
+
             <td class="text-nowrap text-end">
               $ {{ reservation.reservation_total }}
             </td>

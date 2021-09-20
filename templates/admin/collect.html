@@ -23,8 +23,8 @@
         </a>
       </td>
       <td class="text-center">
-        {% if reservation.order_placed != 0 %}<i class="far fa-check-square"></i
-        >{% else %}<i class="far fa-square"></i>{% endif %}
+        {% if reservation.order_placed %}<i class="far fa-check-square"></i>{%
+        else %}<i class="far fa-square"></i>{% endif %}
       </td>
       <td class="text-end">{{reservation.order_item_count}}</td>
       <td class="text-end">$ {{reservation.order_value}}</td>

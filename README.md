@@ -40,13 +40,11 @@ The typical website user is interested in sourcing local farm products.
 The site owners goal is to promote products that is for sale in the local farm shop and administrator reservations from website users.
 
 - As an admin user, I would like to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) my products to the website so my customers can see what the farm shop currently sells.
-- As a user, I would like to reserve goods for later pickup in the farm shop, so I know goods is available when I visit the shop on site.
-- As a user, I would like to get an email confirming my reserved goods, so I know what I reserved.
-- As an admin, I would like to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) all goods reservation so I can reserve manually, see all reservations, confirm reservations and remove reservations.
-- As a user, I would like to login to the site and see my reservations, so I can follow up on what I reserved.
-- As a admin, I would like to login to the site, so I can administrate products, reservations & users.
-- As a user, I would like to search for products, so I can quickly put items in my reservation basket.
-- As a user I can see all opening hours, so I can plan my trip schedule.
+- As a user, I would like to click and collect items for later pickup in the farm shop, so I know items is available when I visit the shop on site.
+- As an admin, I would like to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) all click and collect so I can see all reservations and remove reservations.
+- As a user, I would like to login to the site and see my click and collect, so I can follow up on what I have for pickups.
+- As a admin, I would like to login to the site, so I can administrate products, click and collects & users.
+- As an admin, I would like to comment on the click and collects, so I can let other admins know if the is anything to mention.
 
 Site screenshots are found in the project folder [/wireframes](wireframes).
 
@@ -54,11 +52,10 @@ Site wireframes:
 
 - [Front page](wireframes/front.png) search meal page, showing search results. Also acts as site index page
 - [Product detail page](wireframes/product.png) display product details.
-- [Query results page](wireframes/query.png) list all search results.
-- [Reservation basket page](wireframes/reservation.png) display selected items for prepared for reservation.
-- [user page](wireframes/user.png) display user details.
+- [basket page](wireframes/reservation.png) display selected items for prepared for reservation.
+- [user page](wireframes/user.png) display user details including click and collects.
 - [Sign in Page](wireframes/signin.png) ability to sign in to the site.
-- [list reservations page](wireframes/list-reservations.png) list all users reservations for admin purposes
+- [Admin click and collects page](wireframes/list-reservations.png) list all users reservations for admin purposes
 - [Admin list users page](wireframes/list-users.png) list all users for admin purposes
 
 ## Features
@@ -68,27 +65,24 @@ The site is based on a navigational hierarchical tree structure.
 Navigation bar is responsive and will fold down to a burger menu when it wont fit the size.
 
 **Navigation items:**
-Home page
-Products with category navigation
-search bar
-Reservations basket
-Sign up _(only anonymous users)_
+Home
+Category navigation
+Click and collect basket
 Sign in _(only anonymous users)_
 My page _(only signed in users)_
 Admin _(only signed in admins)_
 
-Each page includes a footer element containing information about the site and links to site social accounts and link to favourites page.
+Each page includes a footer element containing copyright information about the site.
 [Footer wireframe example](wireframes/footer.png)
 
 ### Existing Features
 
-- sign in/out - allows user to sign in to see reservations made and sign out when user would like to leave.
-- sign up - allows user to sign up for an account so user don't have to fill out the information again.
-- close account - allows user to close the account.
-- find products - allows user to find products based on queries.
-- add to reservation basket - allows user to add product to a basket while navigating on the site.
-- create reservation - send current reservation basket to the farm shop.
-  - Tracking of possible product name changes.
+- Sign in/out - allows user to sign in to see reservations made and sign out when user would like to leave.
+- Sign up - allows user to sign up for an account so user don't have to fill out the information again.
+- Find products by category - allows user to find products based on category.
+- Add to click and collect basket - allows user to add product to a basket while navigating on the site.
+- Create click and collect reservation - send current click and collect basket to the farm shop.
+- Set requested pickup date
 - Administrate users - CRUD
 - Administrate products - CRUD
 - Administrate categories - CRUD
@@ -96,7 +90,7 @@ Each page includes a footer element containing information about the site and li
 
 #### Database model
 
-[MongoDB](https://www.mongodb.com/) is used to store all data. Whtin one cluster ("Cluster0") the database "roosterDB" contain the following colletions:
+[MongoDB](https://www.mongodb.com/) is used to store all data. Whtin one cluster ("Cluster0") the database "roosterDB" contain the following collections:
 
 - [Users collection](#users-collection)
 - [Categories collection](#categories-collection)
@@ -113,7 +107,7 @@ Users collection holds client contact and access information.
 | \_id     | ObjectId | unique record id           |
 | name     | string   | Holds client Full name     |
 | email    | string   | Holds client email address |
-| password | string   | user hased password        |
+| password | string   | user hashed password       |
 | isAdmin  | Boolean  | Gives user admin access    |
 
 ##### Categories collection
@@ -129,31 +123,29 @@ Categories collection holds a list of the different product categories.
 
 Products collection holds information about each product.
 
-| field         | type       | description                |
-| ------------- | ---------- | -------------------------- |
-| \_id          | ObjectId   | unique record id           |
-| name          | string     | Holds product name         |
-| description   | string     | Holds product description  |
-| price         | Decimal128 | product item price         |
-| image-url     | string     | Holds url to product image |
-| categories-id | Array      | Array of categories id's   |
+| field       | type       | description                |
+| ----------- | ---------- | -------------------------- |
+| \_id        | ObjectId   | unique record id           |
+| name        | string     | Holds product name         |
+| description | string     | Holds product description  |
+| price       | Decimal128 | product item price         |
+| image-url   | string     | Holds url to product image |
+| categories  | Array      | Array of categories id's   |
 
 ##### Reservations collection
 
 Reservation collection holds each reservation in separate records.
 
-| field                                  | type     | description                                   |
-| -------------------------------------- | -------- | --------------------------------------------- |
-| \_id                                   | ObjectId | unique record id                              |
-| client-name                            | string   | Holds client Full name                        |
-| client-email                           | string   | Holds client email address                    |
-| [products](#products-array-of-objects) | Array    | Holds an array of product objects             |
-| order-comment                          | string   | Client order comment                          |
-| order-date-pickup                      | Date     | Date when client pickups order                |
-| order-date-place                       | Date     | Date when client placed order                 |
-| order-date-last-progress               | Date     | Date when client last updated order           |
-| order-date-confirm                     | Date     | Date when farm shop admin confirmed the order |
-| order-date-completed                   | Date     | Date when order is payed and collected        |
+| field                                  | type     | description                         |
+| -------------------------------------- | -------- | ----------------------------------- |
+| \_id                                   | ObjectId | unique record id                    |
+| client_id                              | ObjectId | Client id                           |
+| client-name                            | string   | Holds client Full name              |
+| client-email                           | string   | Holds client email address          |
+| [products](#products-array-of-objects) | Array    | Holds an array of product objects   |
+| order-comment                          | string   | Client order comment                |
+| order-date-pickup                      | Date     | Date when client pickups order      |
+| order_placed                           | Boolean  | True when customer placed the order |
 
 ###### Products Array of objects
 
@@ -165,14 +157,13 @@ Each product client would like to reserve.
 | name   | string     | Holds product name                           |
 | amount | Int32      | Number of items client would like to reserve |
 | price  | Decimal128 | product item price                           |
+| sum    | Decimal128 | the product of the amount and prices         |
 
 #### Site content
 
-The sample products is provided from:
+The sample products, information and images is provided from Product [daylesford.com](https://www.daylesford.com/online-shop/)
 
 About text is used from [Tapnell farm](https://tapnellfarm.com/about-tapnell-farm)
-
-Product information and product images is used from [daylesford.com](https://www.daylesford.com/online-shop/)
 
 #### Style Information
 
@@ -211,8 +202,6 @@ In this section, all of the languages, frameworks, libraries, and any other tool
   - The project uses **JQuery** to simplify DOM manipulation.
 - [Yarn](https://yarnpkg.com/)
   - Used to start dev environment
-- [emailjs](https://www.emailjs.com/)
-  - Used to send email from site
 - [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html#)
   - Used to create, configure, and manage AWS services.
 
