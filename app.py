@@ -67,10 +67,11 @@ def products(category=None):
     Render products for route "/products" and set page title
     """
 
-    category_id = mongo.db.categories.find_one({ "name": { "$eq": category } }).get("_id")
+    category = mongo.db.categories.find_one({ "name": { "$eq": category } })
+    category_id = category.get("_id")
     products = mongo.db.products.find({ "categories": { "$in": [category_id] } })
 
-    return render_template("products.html",page_title="Products", products=products)
+    return render_template("products.html",page_title="Products", products=products,category=category)
 
 
 @app.route('/product/')
@@ -536,6 +537,8 @@ def admin_product(product_id=None):
     if "categories" in product:
         for category in product["categories"]:
             product["categories"] = mongo.db.categories.find_one({"_id": ObjectId(category)})
+
+
 
     return render_template("admin/product.html",page_title="Product",product=product)
 

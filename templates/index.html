@@ -1,11 +1,9 @@
 {% extends "base.html" %} {% block content %}
-<div class="container px-4 px-lg-5 mt-5">
-  <div
-    class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
-  >
+<div class="container-fluid">
+  <div class="row justify-content-center">
     {% for product in products %}
 
-    <div class="col mb-5">
+    <div class="col-12 col-lg-3 mb-5">
       <div class="card h-100 bg-dark rounded-3">
         <!-- Product image-->
         <a href="{{ url_for('product',product_id=product._id) }}"

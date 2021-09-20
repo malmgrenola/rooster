@@ -1,10 +1,13 @@
 {% extends "base.html" %} {% block content %}
-<div class="container px-4 px-lg-5 mt-5">
-  <div
-    class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center text-light"
-  >
+<div class="container px-4 px-lg-5 mt-lg-5">
+  <div class="row text-center">
+    <div class="col ">
+      <h1>{{category.name}}</h1>
+    </div>
+  </div>
+  <div class="row justify-content-center text-light">
     {% for product in products %}
-    <div class="col mb-5">
+    <div class="col-12 col-lg-3 mb-5 mt-5">
       <div class="card bg-dark h-100">
         <!-- Product image-->
         <a href="{{ url_for('product',product_id=product._id) }}"
@@ -47,7 +50,7 @@
       </div>
     </div>
     {% else %}
-    <div class="col mb-5">No products in category</div>
+    <div class="col mb-5 text-center">No products in category</div>
     {% endfor %}
   </div>
 </div>
