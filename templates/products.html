@@ -36,7 +36,7 @@
           <div class="text-center">
             <form action="{{ url_for('basket') }}" method="post">
               <input
-                id="product_id"
+                id="{{product._id}}"
                 name="product_id"
                 value="{{product._id}}"
                 hidden
