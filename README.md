@@ -199,8 +199,6 @@ In this section, all of the languages, frameworks, libraries, and any other tool
   - Used to display icons on website
 - [JQuery](https://jquery.com)
   - The project uses **JQuery** to simplify DOM manipulation.
-- [Yarn](https://yarnpkg.com/)
-  - Used to start dev environment
 - [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html#)
   - Used to create, configure, and manage AWS services.
 
