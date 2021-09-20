@@ -19,8 +19,7 @@
             <a href="{{ url_for('product',product_id=product._id) }}"
               ><h5 class="fw-bolder">{{ product.name }}</h5></a
             >
-
-            <!-- Product price-->
+            <!-- Product description-->
             <p class="text-tiny">{{ product.description }}</p>
             <!-- Product price-->
             $ {{ product.price }}
@@ -50,6 +49,7 @@
   </div>
   <div class="row justify-content-center">
     <div class="col bg-dark rounded-3 p-4">
+      <h2>About</h2>
       <p>
         Our family has been in farming for over one hundred years and we took
         over the care of Tapnell and East Afton Farms in 1982. At its peak, the
