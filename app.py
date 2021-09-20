@@ -359,7 +359,7 @@ def admin_collect():
 
 
 @app.route("/admin/collect/<reservation_id>", methods=['GET','POST'])
-def admin_collect_details(reservation_id=None,product_id=None):
+def admin_collect_details(reservation_id=None):
 
     if not confirm_admin(): return redirect(url_for('logout'))
 
@@ -376,6 +376,12 @@ def admin_collect_details(reservation_id=None,product_id=None):
             flash("Changes saved")
 
             return redirect(url_for("admin_collect_details",reservation_id=reservation_id))
+
+        if "terminate" in request.form:
+            mongo.db.reservations.delete_one({"_id": ObjectId(reservation_id)})
+            flash("Click and Collect deleted")
+
+            return redirect(url_for("admin_collect"))
 
         product_id = request.args.get('product_id')
         products = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)})["products"]
@@ -536,6 +542,11 @@ def admin_user(user_id=None):
             }
             mongo.db.users.update_one({"_id": ObjectId(user_id)}, {"$set": data})
             flash("User saved")
+
+        if "delete" in request.form:
+            mongo.db.users.delete_one({"_id": ObjectId(user_id)})
+            flash("User deleted")
+            return redirect(url_for("admin_users"))
 
     user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
     if (not user): return redirect(url_for("admin_users"))

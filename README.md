@@ -173,12 +173,11 @@ Site use sans-serif to stay clean on all supported platforms.
 
 ##### Color Scheme
 
-The site color scheme is ... and high contrast, with user information text and navigation bar .....
+The site color scheme is wooden and high contrast, with user information text and navigation bar in light color
 
 ### Features Left to Implement
 
-- Use social logins to use the custom data site on multiple devices.
--
+- ...
 
 ## Technologies Used
 
