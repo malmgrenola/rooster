@@ -124,10 +124,10 @@ def basket():
             add_basket_item(request.form.get("product_id"),amount)
 
         if "place" in request.form:
-            # Create a reservetion with current basket
+            # Create a reservation with current basket
             user = get_user()
             if not user:
-                flash("You must signup or sigin before order can be placed")
+                flash("You must sign up or sig in before order can be placed")
                 return redirect(url_for("signin"))
             user_id = mongo.db.users.find_one({ "email": { "$eq": user["email"] } }).get("_id")
 
@@ -158,8 +158,8 @@ def basket():
 def register():
     """
     Render register for route "/register" and set page title.
-    If user exist function will redirect to signin page.
-    First user in DB will be admin otherwise user will be added to DB.
+    If user exist function will redirect to sign in page.
+    First user in DB will be admin otherwise the user will be added to DB.
     """
     if request.method == "POST":
         #Check if username already exists in db
@@ -177,7 +177,7 @@ def register():
             "password": generate_password_hash(request.form.get("password"))
         }
 
-        #Check if it is the first user and make sure it's a administrator.
+        #Check if it is the first user and make sure it's an administrator.
         numberOfRecords = mongo.db.users.count_documents({})
 
         if numberOfRecords == 0:
@@ -197,7 +197,7 @@ def register():
 def signin():
     """
     Render signin for route "/signin" and set page title.
-    If user exist function will redirect to a page.
+    If a user exists function will redirect to a page.
     """
     if request.method == "POST":
         #Check if username already exists in db
@@ -318,10 +318,9 @@ def reservation(reservation_id=0):
 @app.route("/logout")
 def logout():
     # remove user from session cookie
-    flash("You have been signed out")
     session.pop("user")
     session.pop("basket")
-
+    flash("You have been signed out")
     return redirect(url_for("signin"))
 
 
@@ -628,10 +627,10 @@ def add_basket_item(product_id,amount=1):
 
     index = indexOf(basket,"id",str(product["_id"]))
     if index >= 0:
-        # Product is already in basket, lets update the quantaty
+        # Product is already in basket, lets update the quantity
         basket[index]["amount"] += amount
     else:
-        # Product missing in basket, lets add it
+        # Product missing in basket, let's add it
         item = {
         "id": str(product["_id"]),
         "name": product["name"],
@@ -648,7 +647,7 @@ def add_basket_item(product_id,amount=1):
 
 def get_user():
     """
-    Return avalible user information based on current cookie.
+    Return available user information based on the current cookie.
     Ensure sensitive data is removed.
     """
     if not session:
@@ -689,7 +688,7 @@ def storeBasket():
 
 def indexOf(array,key,value):
     """
-    Return first index of specific key with a specific value in an array of objects.
+    Return the first index of a specific key with a specific value in an array of objects.
     Nothing found returns index -1
     """
     for index, element in enumerate(array):
@@ -726,8 +725,8 @@ def handleUpload(request):
 
 def get_reservations():
     """
-    returns all user resevations based on current session cookie email.
-    injects resevation calculations and current reservation status
+    returns all user reservations based on the current session cookie email.
+    injects reservation calculations and current reservation status
     """
     user = get_user()
     reservations = list(mongo.db.reservations.find(filter={"client_email": user["email"]},sort=[( "order_date_pickup", -1 )]))
@@ -741,7 +740,7 @@ def get_reservations():
 
 def inject_reservation(reservation):
     """
-    injects and returns resevation calculations and current reservation status
+    injects and returns reservation calculations and current reservation status
     """
     order_total = 0
     for product in reservation["products"]:
