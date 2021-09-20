@@ -638,7 +638,8 @@ def add_basket_item(product_id,amount=1):
         "id": str(product["_id"]),
         "name": product["name"],
         "amount": amount,
-        "price":product["price"]
+        "price":product["price"],
+        "image_url":product["image_url"]
         }
         basket.append(item)
 
