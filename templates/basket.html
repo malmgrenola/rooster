@@ -1,8 +1,12 @@
 {% extends "base.html" %} {% block content %}
 <div class="container px-4 px-lg-5 mt-5 text-light">
+  <div class="row text-center">
+    <div class="col"><h1>Your basket</h1></div>
+  </div>
+
   <form action="{{ url_for('basket') }}" method="post">
     <div class="row justify-content-center">
-      <div class="col mb-5">
+      <div class="col mb-5 mb-5 mt-5">
         {% if basket %}
         <table class="table table-sm table-dark">
           <thead>
@@ -82,11 +86,6 @@
         </table>
         {% else %}
         <p>Your basket is empty!</p>
-        <p>Here is a Lion!</p>
-        <img
-          src="https://assets.puzzlefactory.pl/puzzle/205/569/original.webp"
-          alt="image of lion"
-        />
         {% endif %}
       </div>
     </div>
@@ -99,7 +98,7 @@
           class="btn btn-light mt-auto"
           type="submit"
           name="place"
-          value="Pre-order and collect"
+          value="Click and Collect"
         />
       </div>
     </div>
