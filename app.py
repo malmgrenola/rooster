@@ -345,8 +345,7 @@ def admin_collect():
     """
 
     if not confirm_admin(): return redirect(url_for('logout'))
-
-    reservations = list(mongo.db.reservations.find())
+    reservations = list(mongo.db.reservations.find(filter={},sort=[( "order_date_pickup", -1 )]))
 
     for reservation in reservations:
         order_value = 0
@@ -572,7 +571,6 @@ def admin_user(user_id=None):
 
 
 # All Context Processors
-
 @app.context_processor
 def inject_user():
     """
@@ -613,7 +611,6 @@ def inject_year():
 
 
 # All Local helpers
-
 def get_basket():
     """
     get basket from session
@@ -739,7 +736,7 @@ def get_reservations():
     injects resevation calculations and current reservation status
     """
     user = get_user()
-    reservations = list(mongo.db.reservations.find({"client_email": user["email"]}))
+    reservations = list(mongo.db.reservations.find(filter={"client_email": user["email"]},sort=[( "order_date_pickup", -1 )]))
 
     # inject calculations & status
     for reservation in reservations:
