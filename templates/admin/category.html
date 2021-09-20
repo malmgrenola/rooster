@@ -22,34 +22,6 @@
           />
         </td>
       </tr>
-      <tr>
-        <th scope="row" class="w-25">Image</th>
-        <td>
-          {% if category.image_url != "" %}
-          <img
-            src="{{category.image_url}}"
-            alt="{{category.name}} image"
-            class="img-thumbnail"
-          />
-          {% else %}
-          <label for="image">Choose a category picture:</label>
-          <input
-            type="file"
-            id="image"
-            name="image"
-            accept="image/png, image/jpeg"
-          />
-          <button
-            class="btn btn-light btn-sm"
-            type="submit"
-            id="upload"
-            name="upload"
-          >
-            Upload
-          </button>
-          {% endif %}
-        </td>
-      </tr>
     </tbody>
   </table>
   <a class="btn btn-light btn-sm" href="{{ url_for('admin_categories') }}">

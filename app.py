@@ -458,17 +458,8 @@ def admin_category(category_id=None):
             flash("Category deleted")
             return redirect(url_for("admin_categories"))
 
-        if "upload" in request.form:
-            filename = handleUpload(request)
-            if filename != "":
-                mongo.db.categories.update_one({"_id": ObjectId(category_id)}, {"$set": {"image_url": "https://d1o374on78xxxv.cloudfront.net/media/"+filename}})
-                return redirect(url_for("admin_category",category_id=category_id))
-
-
     if category_id == "new":
-        id = mongo.db.categories.insert_one({
-        "name": "",
-        "image_url": ""}).inserted_id
+        id = mongo.db.categories.insert_one({"name": ""}).inserted_id
 
         return redirect(url_for("admin_category",category_id=id))
 

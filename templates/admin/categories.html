@@ -3,20 +3,12 @@
 <table class="table table-sm table-dark">
   <thead>
     <tr>
-      <th scope="col">Image</th>
       <th scope="col">Name</th>
     </tr>
   </thead>
   <tbody>
     {% for category in categories %}
     <tr>
-      <td>
-        <img
-          src="{{category.image_url}}"
-          alt="{{category.name}} image"
-          class="img-thumbnail"
-        />
-      </td>
       <td>
         <a href="category/{{category._id}}"
           >{% if category.name == "" %}No name{% endif %}{{category.name}}</a

@@ -120,11 +120,10 @@ Users collection holds client contact and access information.
 
 Categories collection holds a list of the different product categories.
 
-| field     | type     | description                 |
-| --------- | -------- | --------------------------- |
-| \_id      | ObjectId | unique record id            |
-| name      | string   | Holds client Full name      |
-| image-url | string   | Holds url to category image |
+| field | type     | description         |
+| ----- | -------- | ------------------- |
+| \_id  | ObjectId | unique record id    |
+| name  | string   | Holds Category name |
 
 ##### Products collection
 
@@ -173,11 +172,13 @@ The sample products is provided from:
 
 About text is used from [Tapnell farm](https://tapnellfarm.com/about-tapnell-farm)
 
+Product information and product images is used from [daylesford.com](https://www.daylesford.com/online-shop/)
+
 #### Style Information
 
 ##### Selected Typefaces
 
-Site use ... provided by ... to stay clean on all supported platforms
+Site use sans-serif to stay clean on all supported platforms.
 
 ##### Color Scheme
 
@@ -349,6 +350,7 @@ The template shop-homepage used on this site is from [Start Bootstrap](https://s
 
 The photos used in this site were obtained from:
 
+- [daylesford.com](https://www.daylesford.com/online-shop/)
 - [Lion image](https://puzzlefactory.pl/sv/pussel/spela/fe/205569-animated-lion)
 - https://www.canstockphoto.se/rooster-skiss-34836572.html
 - https://www.rawpixel.com/image/2603952
