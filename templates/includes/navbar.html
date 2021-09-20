@@ -1,15 +1,15 @@
 <!-- Navigation-->
 <header>
-  <h1>
-    <a class="" href="{{ url_for('index') }}"
-      ><img
-        src="{{ url_for('static',filename='assets/logo.png')}}"
-        alt="purple rooster farm shop logo"
-    /></a>
-  </h1>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-light bg-dark">
+    <div class="container-fluid align-items-end">
+      <h1>
+        <a class="" href="{{ url_for('index') }}"
+          ><img
+            src="{{ url_for('static',filename='assets/logo.png')}}"
+            alt="purple rooster farm shop logo"
+        /></a>
+      </h1>
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-light">
-    <div class="container-fluid px-4 px-lg-5">
       <button
         class="navbar-toggler"
         type="button"
@@ -23,7 +23,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="w-100 d-flex">
-          <ul class="navbar-nav flex-grow-1">
+          <ul class="navbar-nav flex-grow-1 ps-4">
             <li class="nav-item   ">
               <a
                 class="nav-link active"
@@ -45,7 +45,7 @@
 
             <li class="nav-item"></li>
           </ul>
-          <ul class="navbar-nav d-flex justify-content-end">
+          <ul class="navbar-nav d-flex justify-content-end pe-4">
             {% if user.isAdmin %}
             <li class="nav-item">
               <a
