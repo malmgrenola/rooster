@@ -1,6 +1,5 @@
 body {
-  background: url("/static/assets/image-from-rawpixel-id-578551-jpeg.jpg")
-    no-repeat center center fixed;
+  background: url("/static/assets/background.jpg") no-repeat center center fixed;
   background-size: cover;
 }
 
