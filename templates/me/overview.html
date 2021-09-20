@@ -1,78 +1,80 @@
 {% extends "me/me_base.html" %} {% block me_base %} {% if user %}
-<div class="row justify-content-center">
-  <div class="col col-lg-3">
-    <h2>
-      Your details
-    </h2>
-    <form method="POST" action="{{ url_for('me') }}">
-      <!--Name-->
-      <div class="mb-3 bg-dark p-2 fs-6">
-        <p>Registered email: <strong>{{user.email}}</strong></p>
-        <label for="name" class="form-label">Name</label>
-        <input
-          type="input"
-          class="form-control m-1"
-          id="name"
-          name="name"
-          autocomplete="name"
-          value="{{user.name}}"
-          required
-        />
-        <button type="submit" class="btn btn-outline-light text-nowrap m-1">
-          Save name
-        </button>
-      </div>
-      <!--Submit-->
-    </form>
-  </div>
-  <div class="col col-lg-9">
-    <h2>
-      Click & Collect's
-    </h2>
+<div class="container px-4 px-lg-5 mt-5">
+  <div class="row justify-content-center">
+    <div class="col col-lg-3">
+      <h2>
+        Your details
+      </h2>
+      <form method="POST" action="{{ url_for('me') }}">
+        <!--Name-->
+        <div class="mb-3 bg-dark p-2 fs-6">
+          <p>Registered email: <strong>{{user.email}}</strong></p>
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="input"
+            class="form-control m-1"
+            id="name"
+            name="name"
+            autocomplete="name"
+            value="{{user.name}}"
+            required
+          />
+          <button type="submit" class="btn btn-outline-light text-nowrap m-1">
+            Save name
+          </button>
+        </div>
+        <!--Submit-->
+      </form>
+    </div>
+    <div class="col col-lg-9">
+      <h2>
+        Click & Collect's
+      </h2>
 
-    {% if not reservations %}
-    <p>No Click & Collect's made yet</p>
-    {% else %}
-    <table class="table table-sm table-dark">
-      <thead>
-        <tr>
-          <th scope="col">Confirmation number</th>
-          <th scope="col">Expected Pickup Date</th>
-          <th scope="col">Status</th>
-          <th scope="col">Date Placed</th>
-          <th scope="col" class="text-end">Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for reservation in reservations %}
-        <tr>
-          <td class="text-tiny">
-            <a
-              href="{{ url_for('reservation',reservation_id=reservation._id ) }}"
-              >{{ 'Not placed' if not reservation.order_placed else 'Placed
-              order' }}</a
-            >
-          </td>
-          <td>
-            {{ '-' if reservation.order_date_pickup == 0 else
-            reservation.order_date_pickup.strftime('%Y-%m-%d') }}
-          </td>
-          <td>
-            {{ reservation.reservation_status }}
-          </td>
-          <td>
-            {{ '-' if reservation.order_date_place == 0 else
-            reservation.order_date_place.strftime('%Y-%m-%d') }}
-          </td>
-          <td class="text-nowrap text-end">
-            $ {{ reservation.reservation_total }}
-          </td>
-        </tr>
+      {% if not reservations %}
+      <p>No Click & Collect's made yet</p>
+      {% else %}
+      <table class="table table-sm table-dark">
+        <thead>
+          <tr>
+            <th scope="col">Confirmation number</th>
+            <th scope="col">Expected Pickup Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Date Placed</th>
+            <th scope="col" class="text-end">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reservation in reservations %}
+          <tr>
+            <td class="text-tiny">
+              <a
+                href="{{ url_for('reservation',reservation_id=reservation._id ) }}"
+                >{{ 'Not placed' if not reservation.order_placed else 'Placed
+                order' }}</a
+              >
+            </td>
+            <td>
+              {{ '-' if reservation.order_date_pickup == 0 else
+              reservation.order_date_pickup.strftime('%Y-%m-%d') }}
+            </td>
+            <td>
+              {{ reservation.reservation_status }}
+            </td>
+            <td>
+              {{ '-' if reservation.order_date_place == 0 else
+              reservation.order_date_place.strftime('%Y-%m-%d') }}
+            </td>
+            <td class="text-nowrap text-end">
+              $ {{ reservation.reservation_total }}
+            </td>
+          </tr>
 
-        {% endfor %}
-      </tbody>
-    </table>
-    {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    </div>
   </div>
 </div>
 {% endif %} {% endblock %}

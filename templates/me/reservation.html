@@ -1,150 +1,152 @@
 {% extends "me/me_base.html" %} {% block me_base %}
-<div class="row justify-content-center">
-  <div class="col col-lg-3">
-    <h2>Details</h2>
-    <div class="mb-3 bg-dark p-2 fs-6">
-      {% if reservation.order_placed %}
-      <p>
-        <strong>Your items are ready for pickup on</strong>
-      </p>
-      <p>
-        <strong
-          >{{ reservation.order_date_pickup.strftime('%Y-%m-%d %H:%M')
-          }}</strong
-        >
-      </p>
-      {% else %}
-      <p>
-        <strong>Select your prefered pickup date</strong>
-      </p>
-      <form
-        class=""
-        action="{{url_for('reservation',reservation_id=reservation._id)}}"
-        method="post"
-      >
-        <input
-          type="datetime-local"
-          class="w-100 m-1"
-          id="pickup-date-time"
-          name="pickup-date-time"
-          value="{{ now if reservation.order_date_pickup == 0 else
-            reservation.order_date_pickup.strftime('%Y-%m-%dT%H:%M') }}"
-          min="{{now}}"
-          required
-        /><button
-          class="btn btn-sm btn-outline-light text-nowrap m-1 w-100"
-          type="submit"
-          id="set"
-          name="set"
-        >
-          Set pickup date
-        </button>
-        {% if reservation.order_date_pickup == 0 %}
-
-        <button
-          class="btn btn-sm btn-outline-light text-nowrap m-1 w-100"
-          type="submit"
-          id="place"
-          name="place"
-          disabled
-        >
-          <i class="fas fa-cart-plus"></i> Place Click & Collect
-        </button>
-
+<div class="container px-4 px-lg-5 mt-5">
+  <div class="row justify-content-center">
+    <div class="col col-lg-3">
+      <h2>Details</h2>
+      <div class="mb-3 bg-dark p-2 fs-6">
+        {% if reservation.order_placed %}
+        <p>
+          <strong>Your items are ready for pickup on</strong>
+        </p>
+        <p>
+          <strong
+            >{{ reservation.order_date_pickup.strftime('%Y-%m-%d %H:%M')
+            }}</strong
+          >
+        </p>
         {% else %}
-        <button
-          class="btn btn-sm btn-outline-light text-nowrap m-1 w-100"
-          type="submit"
-          id="place"
-          name="place"
+        <p>
+          <strong>Select your prefered pickup date</strong>
+        </p>
+        <form
+          class=""
+          action="{{url_for('reservation',reservation_id=reservation._id)}}"
+          method="post"
         >
-          <i class="fas fa-cart-plus"></i> Place Click & Collect
-        </button>
-        {% endif %}
-        <button
-          class="btn btn-sm btn-outline-light text-nowrap m-1"
-          type="submit"
-          id="delete"
-          name="delete"
-        >
-          <i class="far fa-trash-alt"></i> Delete
-        </button>
-      </form>
+          <input
+            type="datetime-local"
+            class="w-100 m-1"
+            id="pickup-date-time"
+            name="pickup-date-time"
+            value="{{ now if reservation.order_date_pickup == 0 else
+            reservation.order_date_pickup.strftime('%Y-%m-%dT%H:%M') }}"
+            min="{{now}}"
+            required
+          /><button
+            class="btn btn-sm btn-outline-light text-nowrap m-1 w-100"
+            type="submit"
+            id="set"
+            name="set"
+          >
+            Set pickup date
+          </button>
+          {% if reservation.order_date_pickup == 0 %}
 
-      {% endif %}
+          <button
+            class="btn btn-sm btn-outline-light text-nowrap m-1 w-100"
+            type="submit"
+            id="place"
+            name="place"
+            disabled
+          >
+            <i class="fas fa-cart-plus"></i> Place Click & Collect
+          </button>
+
+          {% else %}
+          <button
+            class="btn btn-sm btn-outline-light text-nowrap m-1 w-100"
+            type="submit"
+            id="place"
+            name="place"
+          >
+            <i class="fas fa-cart-plus"></i> Place Click & Collect
+          </button>
+          {% endif %}
+          <button
+            class="btn btn-sm btn-outline-light text-nowrap m-1"
+            type="submit"
+            id="delete"
+            name="delete"
+          >
+            <i class="far fa-trash-alt"></i> Delete
+          </button>
+        </form>
+
+        {% endif %}
+      </div>
     </div>
-  </div>
-  <div class="col col-lg-9">
-    <h2>Products</h2>
-    <table class="table table-sm table-dark">
-      <thead>
-        <tr>
-          <th scope="col">Product</th>
-          <th scope="col">Amount</th>
-          <th scope="col" class="text-end">Price</th>
-          <th scope="col" class="text-end">Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for product in reservation["products"] %}
-        <tr>
-          <td>
-            <a href="{{url_for('product',product_id=product.id)}}"
-              >{{product.name}}</a
-            >
-          </td>
-          <td>
-            {% if reservation.order_placed %} {{product.amount}} {% else %}
-            <form
-              id="form-reservation-{{product.id}}"
-              method="POST"
-              action="{{ url_for('reservation',reservation_id=reservation._id, id=product.id) }}"
-            >
-              <div class="input-group">
-                <input
-                  id="amount-{{product.id}}"
-                  name="input"
-                  type="number"
-                  min="1"
-                  max="30"
-                  class="form-control basket-on-enter fs-6"
-                  placeholder="0"
-                  aria-label="amount"
-                  value="{{product.amount}}"
-                />
-                <button
-                  id="update-{{product.id}}"
-                  name="update"
-                  value="{{product.id}}"
-                  class="btn btn-sm btn-outline-light basket-update fs-6"
-                  type="submit"
-                >
-                  update
-                </button>
-                <button
-                  id="rem-{{product.id}}"
-                  name="remove"
-                  value="{{product.id}}"
-                  class="btn btn-sm btn-outline-light fs-6"
-                  type="submit"
-                >
-                  <i class="bi bi-trash-fill"></i>
-                </button>
-              </div>
-            </form>
-            {% endif %}
-          </td>
-          <td class="text-end">$ {{product.price}}</td>
-          <td class="text-end">$ {{product.sum}}</td>
-        </tr>
-        {% endfor %}
-        <tr>
-          <td colspan="4" class="text-end">
-            <strong>Total: </strong>$ {{reservation.reservation_total}}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="col col-lg-9">
+      <h2>Products</h2>
+      <table class="table table-sm table-dark">
+        <thead>
+          <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Amount</th>
+            <th scope="col" class="text-end">Price</th>
+            <th scope="col" class="text-end">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in reservation["products"] %}
+          <tr>
+            <td>
+              <a href="{{url_for('product',product_id=product.id)}}"
+                >{{product.name}}</a
+              >
+            </td>
+            <td>
+              {% if reservation.order_placed %} {{product.amount}} {% else %}
+              <form
+                id="form-reservation-{{product.id}}"
+                method="POST"
+                action="{{ url_for('reservation',reservation_id=reservation._id, id=product.id) }}"
+              >
+                <div class="input-group">
+                  <input
+                    id="amount-{{product.id}}"
+                    name="input"
+                    type="number"
+                    min="1"
+                    max="30"
+                    class="form-control basket-on-enter fs-6"
+                    placeholder="0"
+                    aria-label="amount"
+                    value="{{product.amount}}"
+                  />
+                  <button
+                    id="update-{{product.id}}"
+                    name="update"
+                    value="{{product.id}}"
+                    class="btn btn-sm btn-outline-light basket-update fs-6"
+                    type="submit"
+                  >
+                    update
+                  </button>
+                  <button
+                    id="rem-{{product.id}}"
+                    name="remove"
+                    value="{{product.id}}"
+                    class="btn btn-sm btn-outline-light fs-6"
+                    type="submit"
+                  >
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </div>
+              </form>
+              {% endif %}
+            </td>
+            <td class="text-end">$ {{product.price}}</td>
+            <td class="text-end">$ {{product.sum}}</td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <td colspan="4" class="text-end">
+              <strong>Total: </strong>$ {{reservation.reservation_total}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 {% endblock %}

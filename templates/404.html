@@ -1,16 +1,13 @@
 {% extends "base.html" %} {% block content %}
-<!-- Section-->
-<section class="py-5 text-light">
-  <div class="container px-4 px-lg-5 mt-5">
-    <div class="row justify-content-center">
-      <div class="col">
-        <h1>Error 404</h1>
-        <p>The page your are trying to reach does not excist.</p>
-        <p>
-          Try and go back to our <a href="{{url_for('index')}}">front page</a>!
-        </p>
-      </div>
+<div class="container px-4 px-lg-5 mt-5">
+  <div class="row justify-content-center">
+    <div class="col">
+      <h1>Error 404</h1>
+      <p>The page your are trying to reach does not excist.</p>
+      <p>
+        Try and go back to our <a href="{{url_for('index')}}">front page</a>!
+      </p>
     </div>
   </div>
-</section>
+</div>
 {% endblock %}

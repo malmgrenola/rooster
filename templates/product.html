@@ -1,72 +1,74 @@
 {% extends "base.html" %} {% block content %}
-<div class="row justify-content-center text-light">
-  {% if product %}
-  <!-- Product details-->
-  <!-- Product image-->
-  <div class="col">
-    <img
-      class="card-img-top"
-      src="{{ product.image_url }}"
-      alt="Image of {{ product.name }}"
-    />
-  </div>
-  <!-- Product details-->
-  <div class="col">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col"><h5 class="fw-bolder">{{ product.name }}</h5></div>
-      </div>
-      <div class="row">
-        <div class="col"><p>{{ product.description }}</p></div>
-      </div>
-      <div class="row">
-        <div class="col"><hr /></div>
-      </div>
-      <div class="row">
-        <div class="col"><p>$ {{ product.price }}</p></div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <form
-            id="form-{{product.id}}"
-            method="POST"
-            action="{{ url_for('basket') }}"
-          >
-            <div class="input-group">
-              <input
-                id="amount"
-                name="amount"
-                type="number"
-                min="1"
-                max="30"
-                class="form-control basket-on-enter"
-                placeholder="0"
-                aria-label="amount"
-                value="1"
-              />
-              <input
-                id="product_id"
-                name="product_id"
-                value="{{product._id}}"
-                hidden
-              />
-              <button
-                id="add"
-                name="add"
-                value="{{product.id}}"
-                class="btn btn-outline-light basket-update"
-                type="submit"
-              >
-                Add
-              </button>
-            </div>
-          </form>
+<div class="container px-4 px-lg-5 mt-5">
+  <div class="row justify-content-center text-light">
+    {% if product %}
+    <!-- Product details-->
+    <!-- Product image-->
+    <div class="col">
+      <img
+        class="card-img-top"
+        src="{{ product.image_url }}"
+        alt="Image of {{ product.name }}"
+      />
+    </div>
+    <!-- Product details-->
+    <div class="col">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col"><h5 class="fw-bolder">{{ product.name }}</h5></div>
+        </div>
+        <div class="row">
+          <div class="col"><p>{{ product.description }}</p></div>
+        </div>
+        <div class="row">
+          <div class="col"><hr /></div>
+        </div>
+        <div class="row">
+          <div class="col"><p>$ {{ product.price }}</p></div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <form
+              id="form-{{product.id}}"
+              method="POST"
+              action="{{ url_for('basket') }}"
+            >
+              <div class="input-group">
+                <input
+                  id="amount"
+                  name="amount"
+                  type="number"
+                  min="1"
+                  max="30"
+                  class="form-control basket-on-enter"
+                  placeholder="0"
+                  aria-label="amount"
+                  value="1"
+                />
+                <input
+                  id="product_id"
+                  name="product_id"
+                  value="{{product._id}}"
+                  hidden
+                />
+                <button
+                  id="add"
+                  name="add"
+                  value="{{product.id}}"
+                  class="btn btn-outline-light basket-update"
+                  type="submit"
+                >
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
+    {% else %}
+    <div class="col mb-5">No product like this</div>
+    {% endif %}
   </div>
-  {% else %}
-  <div class="col mb-5">No product like this</div>
-  {% endif %}
 </div>
 {% endblock %}

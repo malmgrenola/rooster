@@ -4,6 +4,10 @@ body {
   background-size: cover;
 }
 
+.main {
+  min-height: calc(100vh - 330px);
+}
+
 .text-nav {
   font-size: 1rem;
 }
