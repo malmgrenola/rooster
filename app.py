@@ -348,7 +348,6 @@ def admin_collect():
         for product in reservation["products"]:
             sum = int(product["amount"]) * float(product["price"])
             order_item_count += int(product["amount"])
-            print(product["amount"], product["price"], sum)
             product["sum"] = sum
             order_value += sum
         reservation["order_value"] = order_value
