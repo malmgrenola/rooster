@@ -365,13 +365,11 @@ def admin_collect_details(reservation_id=None):
     if request.method == "POST":
 
         if "save" in request.form:
-            data = {}
+
             if (request.form.get("pickup-date-time") != ""):
-                data["pickup-date-time"] = request.form.get("pickup-date-time")
+                d = datetime.strptime(request.form.get("pickup-date-time"), "%Y-%m-%dT%H:%M")
 
-            data["order_comment"] = request.form.get("order_comment")
-
-            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": data})
+            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"order_date_pickup": d, "order_comment": request.form.get("order_comment")}})
             flash("Changes saved")
 
             return redirect(url_for("admin_collect_details",reservation_id=reservation_id))
