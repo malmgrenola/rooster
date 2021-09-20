@@ -1,24 +1,26 @@
 {% extends "base.html" %} {% block content %}
 <div class="container px-4 px-lg-5 mt-5">
-  <div class="row justify-content-center text-light">
+  <div class="row justify-content-center text-light bg-dark">
     {% if product %}
     <!-- Product details-->
     <!-- Product image-->
-    <div class="col">
+    <div class="col-12 col-lg-6">
       <img
-        class="card-img-top"
+        class="card-img"
         src="{{ product.image_url }}"
         alt="Image of {{ product.name }}"
       />
     </div>
     <!-- Product details-->
-    <div class="col">
-      <div class="container-fluid">
+    <div class="col-12 col-lg-6">
+      <div class="container-fluid  m-2">
         <div class="row">
           <div class="col"><h5 class="fw-bolder">{{ product.name }}</h5></div>
         </div>
         <div class="row">
-          <div class="col"><p>{{ product.description }}</p></div>
+          <div class="col">
+            <p class="text-tiny">{{ product.description }}</p>
+          </div>
         </div>
         <div class="row">
           <div class="col"><hr /></div>
