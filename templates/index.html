@@ -19,6 +19,9 @@
             <a href="{{ url_for('product',product_id=product._id) }}"
               ><h5 class="fw-bolder">{{ product.name }}</h5></a
             >
+
+            <!-- Product price-->
+            <p class="text-tiny">{{ product.description }}</p>
             <!-- Product price-->
             $ {{ product.price }}
           </div>
