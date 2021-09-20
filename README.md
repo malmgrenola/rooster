@@ -4,7 +4,7 @@ The local farm shop site that promotes their products online with the ability to
 
 Live site location:
 
-[Purple Rooster Farm Shop Website](#)
+[Purple Rooster Farm Shop Website](http://purple-rooster.herokuapp.com/)
 
 ![badge](https://img.shields.io/w3c-validation/html?style=plastic&targetUrl=https%3A%2F%2Fpurple-rooster.herokuapp.com)
 
