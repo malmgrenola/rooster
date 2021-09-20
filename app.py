@@ -71,7 +71,7 @@ def products(category=None):
     category_id = category.get("_id")
     products = mongo.db.products.find({ "categories": { "$in": [category_id] } })
 
-    return render_template("products.html",page_title="Products", products=products,category=category)
+    return render_template("products.html",page_title=category["name"], products=products,category=category)
 
 
 @app.route('/product/')
@@ -87,7 +87,7 @@ def product(product_id=None):
 
     product = mongo.db.products.find_one({ "_id": ObjectId(product_id) })
 
-    return render_template("product.html",page_title=f'Product {escape(product)}', product=product)
+    return render_template("product.html",page_title=product["name"], product=product)
 
 
 @app.route("/basket", methods=["GET", "POST"])
@@ -252,7 +252,7 @@ def me():
 
     reservations = get_reservations()
 
-    return render_template("/me/overview.html",page_title="User",reservations=reservations)
+    return render_template("/me/overview.html",page_title="Me",reservations=reservations)
 
 
 @app.route("/me/reservation/")
@@ -314,7 +314,7 @@ def reservation(reservation_id=0):
 
     reservation = inject_reservation(reservation)
 
-    return render_template("me/reservation.html",page_title="reservation", reservation=reservation)
+    return render_template("me/reservation.html",page_title="My Reservation", reservation=reservation)
 
 
 @app.route("/logout")
@@ -422,7 +422,7 @@ def admin_collect_details(reservation_id=None,product_id=None):
     if (details["order_date_pickup"]!= 0):
         details["order_date_pickup_datetime"] = datetime.strftime(details["order_date_pickup"], '%Y-%m-%dT%H:%M')
 
-    return render_template("admin/collect_details.html",page_title="Click & Collect",details=details)
+    return render_template("admin/collect_details.html",page_title="Reservation details",details=details)
 
 
 @app.route("/admin/categories")
@@ -540,7 +540,7 @@ def admin_product(product_id=None):
 
 
 
-    return render_template("admin/product.html",page_title="Product",product=product)
+    return render_template("admin/product.html",page_title=product["name"],product=product)
 
 
 @app.route("/admin/users")
@@ -571,7 +571,7 @@ def admin_user(user_id=None):
     user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
     if (not user): return redirect(url_for("admin_users"))
 
-    return render_template("admin/user.html",page_title="Users",user=user)
+    return render_template("admin/user.html",page_title=user["name"],user=user)
 
 
 # All Context Processors
