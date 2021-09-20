@@ -223,62 +223,149 @@ Site is tested on the following platforms and browsers
 
 All tests pass on all platforms.
 
-### Test reservations
-
-The site has this feature by using something.
-
-The feature handles errors & success in the UI.
-
-#### Test reservations basket form
-
-1. feature test:
-   1. Go to a page page
-   2. Do something.
-   3. Expect something to happen
-
-Feature passed this test
-
-#### Test send reservations
-
-1. feature test:
-   1. Go to a page page
-   2. Do something.
-   3. Expect something to happen
-
-Feature passed this test
-
 ### Test users
 
 #### Test sign in
 
 1. feature test:
-   1. Go to a page page
-   2. Do something.
-   3. Expect something to happen
+   1. Go to a https://purple-rooster.herokuapp.com/signin
+   2. use username `user@rooster.com` and password `bad`
+   3. Confirm incorrect Username and/or Password.
+   4. use username `user@rooster.com` and password `123456`
+   5. Confirm successful sign in.
+   6. change your user name and press `Save name`
 
 Feature passed this test
 
 #### Test sign up
 
 1. feature test:
-   1. Go to a page page
-   2. Do something.
-   3. Expect something to happen
+   1. When signed out, Go to http://purple-rooster.herokuapp.com/register
+   2. register with name `My name` and email `user@rooster.com` use any password
+   3. confirm username already exists message
+   4. register with name `Your Name` and email `anythingrandom@rooster.com` use password `123456`
+   5. Confirm Registration Successful!
+   6. sign in with new username
+   7. confirm succesful login
 
 Feature passed this test
 
 #### Test sign out
 
 1. feature test:
-   1. Go to a page page
-   2. Do something.
-   3. Expect something to happen
+   1. When signed in, Go to http://purple-rooster.herokuapp.com/me/overview
+   2. click `sign out` next to user name in header
+   3. confirm you are signed out and redirected to sign in page
+
+Feature passed this test
+
+### Test Click and Collect
+
+The site has a click and collect feature by add items to a basket and from basket click click and collect.
+The user can select a pickup date and place the order.
+
+The feature handles errors & success in the UI.
+
+#### Test basket Click and collect
+
+The feature handles errors & success in the UI.
+
+1. feature test:
+   1. Go to front page
+   2. Click `Add to basket` on any product
+   3. Click `Add to basket` on another product
+   4. Confirm by click on cart in top menu
+   5. step up a couple of steps on product row and press update
+   6. press trash icon on one of the rows and confirm item is removed.
+
+Feature passed this test
+
+#### Test place click and collect
+
+1. feature test:
+   1. with items in basket
+   2. go to http://purple-rooster.herokuapp.com/basket
+   3. click `Click and Collect` button in the bottom of the form
+   4. select Select your prefered pickup date in the date time field and press `set pickup date button`
+   5. modify your items and confirm functions update and remove
+   6. click the `Place Click and collect`
+   7. confirm your order is placed
+
+Feature passed this test
+
+### Test Administrator
+
+The site has an administrator section where site can be controlled.
+
+The feature handles errors & success in the UI.
+
+#### Test Admin Click and collect
+
+The feature handles errors & success in the UI.
+
+1. feature test:
+   1. When signed out, Sign in as `admin@rooster.com` and password `123456`
+   2. In the navbar click the toolbox (http://purple-rooster.herokuapp.com/admin/collect)
+   3. Click on any sample Click & Collect made to open up details
+   4. confirm pickup date, comment and items row can update on request using `Save changes`
+   5. confirm a sample click and collect can be deleted by clicking `delete`
+
+Feature passed this test
+
+#### Test Admin Categories
+
+The feature handles errors & success in the UI.
+
+1. feature test:
+   1. in the admin section click `Categories` in the horizontal toolbar.
+   2. Press `create new`
+   3. Give the new category the name `Test` and press `Save`
+   4. Confirm toolbar get the new category `Test`
+   5. Go back to Category `Test` and click `Delete category`
+   6. Confirm `Test` is removed from toolbar
+
+Feature passed this test
+
+#### Test Admin Products
+
+The feature handles errors & success in the UI.
+
+1. feature test:
+
+   1. in the admin section click `Products` in the horizontal toolbar.
+   2. Press `create new` in the bottom of the page.
+   3. Give the new product the name `Test product`
+   4. Give the new product the description `A test description`
+   5. Give the new product the price `10`
+   6. Select category `Meat`
+   7. Press `Save`
+   8. Download sample image to your local desktop from https://purple-rooster.herokuapp.com/static/assets/testproduct.jpg
+   9. click choose file and select the sample image from your local desktop
+   10. Press upload and confirm `file uploaded` message
+   11. In top navbar click `Meat section` and confirm `Test product` is there.
+   12. Go back to http://purple-rooster.herokuapp.com/admin/products and click on test product
+   13. Press `Delete product` and confirm product is deleted in list.
+
+Feature passed this test
+
+#### Test Admin Users
+
+The feature handles errors & success in the UI.
+
+1. feature test:
+
+   1. sign out and register a test user.
+   2. Sign in as `admin@rooster.com` and password `123456`
+   3. In the admin section click `Users` in the horizontal toolbar.
+   4. Click on the user created in step 1
+   5. confirm name change, email change and set as admin change when `Save` is clicked
+   6. Confirm user is removed when `delete` is clicked.
 
 Feature passed this test
 
 ### Confirm Page not found
 
-1. Goto "https://malmgrenola.github.io/rooster/no-page.html"
+1. Goto "https://purple-rooster.herokuapp.com/nothing"
 2. Confirm you get a "Page not found" Page
 
 Feature passed this test
@@ -289,19 +376,24 @@ Each page should return no errors & warnings using [validator.w3.org](https://va
 
 #### Pages to test
 
-1. [index.html](https://validator.w3.org/nu/?showsource=yes&doc=https%3A%2F%2Fdomain%2Frooster%2Findex.html)
+1. [index.html](https://validator.w3.org/nu/?checkerrorpages=yes&useragent=Validator.nu%2FLV+http%3A%2F%2Fvalidator.w3.org%2Fservices&acceptlanguage=&doc=https%3A%2F%2Fpurple-rooster.herokuapp.com%2F)
+2. [Product Fruits Page](https://validator.w3.org/nu/?doc=https%3A%2F%2Fpurple-rooster.herokuapp.com%2Fproducts%2FFruits)
 
-All pages are validated without errors or warnings.
+Pages are validated without errors or warnings.
 
 ### CSS Validation
 
 Site CSS should return no errors or warnings.
 
-[CSS Validator testing style.css](https://jigsaw.w3.org/css-validator/validator?uri=domain%2Frooster%2Fassets%2Fcss%2Fstyle.css&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en)
+1. [CSS Validator testing style.css](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fpurple-rooster.herokuapp.com%2Fstatic%2Fcss%2Fstyles.css&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=sv)
+2. [CSS Validator testing rooster.css](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fpurple-rooster.herokuapp.com%2Fstatic%2Fcss%2Frooster.css&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=sv)
+
+CSS files passed test. Note that there is Bootstrap warnings.
 
 ### Known issues
 
-1. ...
+1. when clicking navbar and a new route is made style is flickering before landing on correct style.
+2. ...
 
 ## Deployment
 
@@ -316,15 +408,12 @@ make sure you run `pip3 freeze > requirements.txt` for all dependecies used.
 
 Versioning of this project uses [Github](https://github.com/)
 
-This project uses `yarn` to start a development server.
-
 1. Fork the [rooster repo](https://github.com/malmgrenola/rooster)
 2. In the terminal run `git clone https://github.com/{your-own-gituser-here}/rooster.git` - to fetch code
 3. In the terminal run `cd rooster` - to place yourself in the root of the project.
-4. In the terminal run `yarn` - to download all dependencies
-5. `yarn dev` - to start a dev environment.
+4. In the terminal run `python3 app.py` - to start a dev environment.
 
-a `python3` should start using the file `run.py` serving the Flask app and the site is now available on `http://localhost:3000`.
+a `python3` should start using the file `app.py` serving the Flask app and the site is now available on `http://localhost:3000`.
 
 ## Credits
 
@@ -337,7 +426,8 @@ The template shop-homepage used on this site is from [Start Bootstrap](https://s
 The photos used in this site were obtained from:
 
 - [daylesford.com](https://www.daylesford.com/online-shop/)
--
+- [background](#)
+- [rooster in logo](#)
 
 ### Acknowledgements
 
