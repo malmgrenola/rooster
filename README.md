@@ -394,7 +394,7 @@ CSS files passed the test. Note that there are Bootstrap warnings.
 ### Known issues
 
 1. When clicking the navbar and a new route is made, style is flickering before landing on the correct style.
-2. ...
+2. Admin section products table is wider than the width of most small screens portrait mode.
 
 ## Deployment
 

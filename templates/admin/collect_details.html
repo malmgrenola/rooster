@@ -49,7 +49,6 @@
             id="order_comment"
             name="order_comment"
             rows="2"
-            cols="50"
           >
 {{details.order_comment}}</textarea
           >
@@ -81,7 +80,7 @@
     {% for product in details.products %}
     <tr>
       <td>{{product.name}}</td>
-      <td class="w-25">
+      <td class="">
         <form
           id="form-{{product.id}}"
           method="POST"
