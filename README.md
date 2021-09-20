@@ -40,20 +40,20 @@ The typical website user is interested in sourcing local farm products.
 The site owners goal is to promote products that is for sale in the local farm shop and administrator reservations from website users.
 
 - As an admin user, I would like to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) my products to the website so my customers can see what the farm shop currently sells.
-- As a user, I would like to click and collect items for later pickup in the farm shop, so I know items is available when I visit the shop on site.
+- As a user, I would like to click and collect items for later pickup in the farm shop, so I know items are available when I visit the shop on site.
 - As an admin, I would like to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) all click and collect so I can see all reservations and remove reservations.
 - As a user, I would like to login to the site and see my click and collect, so I can follow up on what I have for pickups.
-- As a admin, I would like to login to the site, so I can administrate products, click and collects & users.
-- As an admin, I would like to comment on the click and collects, so I can let other admins know if the is anything to mention.
+- As an admin, I would like to login to the site, so I can administer products, click and collects & users.
+- As an admin, I would like to comment on the click and collect, so I can let other admins know if there is anything to mention.
 
 Site screenshots are found in the project folder [/wireframes](wireframes).
 
 Site wireframes:
 
 - [Front page](wireframes/front.png) search meal page, showing search results. Also acts as site index page
-- [Product detail page](wireframes/product.png) display product details.
-- [basket page](wireframes/reservation.png) display selected items for prepared for reservation.
-- [user page](wireframes/user.png) display user details including click and collects.
+- [Product detail page](wireframes/product.png) displays product details.
+- [basket page](wireframes/reservation.png) displays selected items prepared for reservation.
+- [user page](wireframes/user.png) displays user details including clicks and collects.
 - [Sign in Page](wireframes/signin.png) ability to sign in to the site.
 - [Admin click and collects page](wireframes/list-reservations.png) list all users reservations for admin purposes
 - [Admin list users page](wireframes/list-users.png) list all users for admin purposes
@@ -77,21 +77,22 @@ Each page includes a footer element containing copyright information about the s
 
 ### Existing Features
 
-- Sign in/out - allows user to sign in to see reservations made and sign out when user would like to leave.
-- Sign up - allows user to sign up for an account so user don't have to fill out the information again.
-- Find products by category - allows user to find products based on category.
-- Add to click and collect basket - allows user to add product to a basket while navigating on the site.
+- Sign in/out - allows users to sign in to see reservations made and sign out when the user would like to leave.
+- Sign up - allows users to sign up for an account so users don't have to fill out the information again.
+- Find products by category - allows users to find products based on category.
+- Add to click and collect basket - allows users to add product to a basket while navigating on the site.
 - Create click and collect reservation - send current click and collect basket to the farm shop.
 - Set requested pickup date
 - Administrate users - CRUD
 - Administrate products - CRUD
 - Administrate categories - CRUD
 - Administrate reservations - CRUD
-- Upload product images to external CDN for use on website.
+- Upload product images to external CDN for use on this website.
+- Front page shows random products
 
 #### Database model
 
-[MongoDB](https://www.mongodb.com/) is used to store all data. Whtin one cluster ("Cluster0") the database "roosterDB" contain the following collections:
+[MongoDB](https://www.mongodb.com/) is used to store all data. Within one cluster ("Cluster0") the database "roosterDB'' contain the following collections:
 
 - [Users collection](#users-collection)
 - [Categories collection](#categories-collection)
@@ -170,7 +171,7 @@ About text is used from [Tapnell farm](https://tapnellfarm.com/about-tapnell-far
 
 ##### Selected Typefaces
 
-Site use sans-serif to stay clean on all supported platforms.
+Site uses sans-serif to stay clean on all supported platforms.
 
 ##### Color Scheme
 
@@ -246,7 +247,7 @@ Feature passed this test
    4. register with name `Your Name` and email `anythingrandom@rooster.com` use password `123456`
    5. Confirm Registration Successful!
    6. sign in with new username
-   7. confirm succesful login
+   7. confirm successful login
 
 Feature passed this test
 
@@ -254,14 +255,14 @@ Feature passed this test
 
 1. feature test:
    1. When signed in, Go to http://purple-rooster.herokuapp.com/me/overview
-   2. click `sign out` next to user name in header
+   2. click `sign out` next to username in header
    3. confirm you are signed out and redirected to sign in page
 
 Feature passed this test
 
 ### Test Click and Collect
 
-The site has a click and collect feature by add items to a basket and from basket click click and collect.
+The site has a click and collect feature by adding items to a basket and from basket click click and collect.
 The user can select a pickup date and place the order.
 
 The feature handles errors & success in the UI.
@@ -276,7 +277,7 @@ The feature handles errors & success in the UI.
    3. Click `Add to basket` on another product
    4. Confirm by click on cart in top menu
    5. step up a couple of steps on product row and press update
-   6. press trash icon on one of the rows and confirm item is removed.
+   6. press the trash icon on one of the rows and confirm the item is removed.
 
 Feature passed this test
 
@@ -295,7 +296,7 @@ Feature passed this test
 
 ### Test Administrator
 
-The site has an administrator section where site can be controlled.
+The site has an administrator section where the site can be controlled.
 
 The feature handles errors & success in the UI.
 
@@ -333,7 +334,7 @@ The feature handles errors & success in the UI.
 1. feature test:
 
    1. in the admin section click `Products` in the horizontal toolbar.
-   2. Press `create new` in the bottom of the page.
+   2. Press `create new` at the bottom of the page.
    3. Give the new product the name `Test product`
    4. Give the new product the description `A test description`
    5. Give the new product the price `10`
@@ -342,9 +343,9 @@ The feature handles errors & success in the UI.
    8. Download sample image to your local desktop from https://purple-rooster.herokuapp.com/static/assets/testproduct.jpg
    9. click choose file and select the sample image from your local desktop
    10. Press upload and confirm `file uploaded` message
-   11. In top navbar click `Meat section` and confirm `Test product` is there.
+   11. In the top navbar click `Meat section` and confirm `Test product` is there.
    12. Go back to http://purple-rooster.herokuapp.com/admin/products and click on test product
-   13. Press `Delete product` and confirm product is deleted in list.
+   13. Press `Delete product` and confirm the product is deleted in the list.
 
 Feature passed this test
 
@@ -359,7 +360,7 @@ The feature handles errors & success in the UI.
    3. In the admin section click `Users` in the horizontal toolbar.
    4. Click on the user created in step 1
    5. confirm name change, email change and set as admin change when `Save` is clicked
-   6. Confirm user is removed when `delete` is clicked.
+   6. Confirm the user is removed when `delete` is clicked.
 
 Feature passed this test
 
@@ -388,21 +389,21 @@ Site CSS should return no errors or warnings.
 1. [CSS Validator testing style.css](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fpurple-rooster.herokuapp.com%2Fstatic%2Fcss%2Fstyles.css&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=sv)
 2. [CSS Validator testing rooster.css](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fpurple-rooster.herokuapp.com%2Fstatic%2Fcss%2Frooster.css&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=sv)
 
-CSS files passed test. Note that there is Bootstrap warnings.
+CSS files passed the test. Note that there are Bootstrap warnings.
 
 ### Known issues
 
-1. when clicking navbar and a new route is made style is flickering before landing on correct style.
+1. When clicking the navbar and a new route is made, style is flickering before landing on the correct style.
 2. ...
 
 ## Deployment
 
 Site is deployed to https://purple-rooster.herokuapp.com/ using [Heruko](https://heruko.com).
 
-Heruko is connected to the Github repository with automatic deploy from the branch `main`.
-Every push or merge to main will trigger a new deploy.
+Heroku is connected to the Github repository with automatic deployment from the branch `main`.
+Every push or merge to main will trigger a new deployment.
 
-make sure you run `pip3 freeze > requirements.txt` for all dependecies used.
+make sure you run `pip3 freeze > requirements.txt` for all dependencies used.
 
 ## Development
 
@@ -413,7 +414,7 @@ Versioning of this project uses [Github](https://github.com/)
 3. In the terminal run `cd rooster` - to place yourself in the root of the project.
 4. In the terminal run `python3 app.py` - to start a dev environment.
 
-a `python3` should start using the file `app.py` serving the Flask app and the site is now available on `http://localhost:3000`.
+A `python3` should start using the file `app.py` serving the Flask app and the site is now available on `http://localhost:3000`.
 
 ## Credits
 
