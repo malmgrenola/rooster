@@ -3,15 +3,20 @@
   <div class="col col-lg-3">
     <h2>Details</h2>
     <div class="mb-3 bg-dark p-2 fs-6">
+      {% if reservation.order_placed %}
       <p>
-        {{ 'Order not placed (' ~
-        reservation.order_date_last_progress.strftime('%Y-%m-%d') ~ ')' if
-        reservation.order_date_place == 0 else 'Placed order' }}
+        <strong>Your items are ready for pickup on</strong>
       </p>
       <p>
-        <strong>Pickup scheduled</strong>
+        <strong
+          >{{ reservation.order_date_pickup.strftime('%Y-%m-%d %H:%M')
+          }}</strong
+        >
       </p>
-      {% if reservation.reservation_status_id < 2 %}
+      {% else %}
+      <p>
+        <strong>Select your prefered pickup date</strong>
+      </p>
       <form
         class=""
         action="{{url_for('reservation',reservation_id=reservation._id)}}"
@@ -19,42 +24,58 @@
       >
         <input
           type="datetime-local"
+          class="w-100 m-1"
           id="pickup-date-time"
           name="pickup-date-time"
-          value="{{ '0' if reservation.order_date_pickup == 0 else
+          value="{{ now if reservation.order_date_pickup == 0 else
             reservation.order_date_pickup.strftime('%Y-%m-%dT%H:%M') }}"
-          min="2018-06-07T00:00"
+          min="{{now}}"
           required
         /><button
-          class="btn btn-sm btn-outline-light text-nowrap m-1"
+          class="btn btn-sm btn-outline-light text-nowrap m-1 w-100"
           type="submit"
           id="set"
           name="set"
         >
-          Set date
+          Set pickup date
+        </button>
+        {% if reservation.order_date_pickup == 0 %}
+
+        <button
+          class="btn btn-sm btn-outline-light text-nowrap m-1 w-100"
+          type="submit"
+          id="place"
+          name="place"
+          disabled
+        >
+          <i class="fas fa-cart-plus"></i> Place Click & Collect
+        </button>
+
+        {% else %}
+        <button
+          class="btn btn-sm btn-outline-light text-nowrap m-1 w-100"
+          type="submit"
+          id="place"
+          name="place"
+        >
+          <i class="fas fa-cart-plus"></i> Place Click & Collect
+        </button>
+        {% endif %}
+        <button
+          class="btn btn-sm btn-outline-light text-nowrap m-1"
+          type="submit"
+          id="delete"
+          name="delete"
+        >
+          <i class="far fa-trash-alt"></i> Delete
         </button>
       </form>
-      {% else %} {{ '-' if reservation.order_date_pickup == 0 else
-      reservation.order_date_pickup.strftime('%Y-%m-%d %H:%M') }} {% if
-      reservation.reservation_status_id > 0 %} {% endif %}
 
-      <p>
-        {% if reservation.reservation_status_id == 1 %}
-        <strong>Pickup is not Confirmed by shop</strong>
-        {% endif %} {% if reservation.reservation_status_id == 2 %}
-        <strong>Pickup is confirmed by shop</strong>
-        {% endif %} {% if reservation.reservation_status_id == 3 %}
-        <strong>Ready for pickup</strong>
-        {% endif %} {% if reservation.reservation_status_id == 4 %}
-        <strong>Collected by customer</strong>
-        {% endif %}
-      </p>
       {% endif %}
     </div>
   </div>
   <div class="col col-lg-9">
     <h2>Products</h2>
-    {% include 'me/navbar.html' %}
     <table class="table table-sm table-dark">
       <thead>
         <tr>
@@ -73,11 +94,11 @@
             >
           </td>
           <td>
-            {% if reservation.reservation_status_id < 2 %}
+            {% if reservation.order_placed %} {{product.amount}} {% else %}
             <form
               id="form-reservation-{{product.id}}"
               method="POST"
-              action="{{ url_for('reservation',reservation_id=reservation._id, product_id=product.id) }}"
+              action="{{ url_for('reservation',reservation_id=reservation._id, id=product.id) }}"
             >
               <div class="input-group">
                 <input
@@ -111,7 +132,7 @@
                 </button>
               </div>
             </form>
-            {% else %} {{product.amount}} {% endif %}
+            {% endif %}
           </td>
           <td class="text-end">$ {{product.price}}</td>
           <td class="text-end">$ {{product.sum}}</td>

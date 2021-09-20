@@ -49,9 +49,8 @@
           <td class="text-tiny">
             <a
               href="{{ url_for('reservation',reservation_id=reservation._id ) }}"
-              >{{ 'Not placed (' ~
-              reservation.order_date_last_progress.strftime('%Y-%m-%d') ~ ')' if
-              reservation.order_date_place == 0 else 'Placed order' }}</a
+              >{{ 'Not placed' if not reservation.order_placed else 'Placed
+              order' }}</a
             >
           </td>
           <td>

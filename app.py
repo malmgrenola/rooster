@@ -94,6 +94,9 @@ def basket():
     """
     Render basket & button handlers for basket page
     """
+
+    basket = get_basket()
+
     if request.method == "POST":
         basket = get_basket()
 
@@ -104,7 +107,7 @@ def basket():
             session["basket"] = basket
             storeBasket()
 
-        elif "update" in request.form:
+        if "update" in request.form:
             # update amount manually
             if "input" in request.form:
                 newValue = int(request.form["input"])
@@ -114,13 +117,13 @@ def basket():
                     session["basket"] = basket
                     storeBasket()
 
-        elif "add" in request.form:
+        if "add" in request.form:
             product = get_basket_item(request.form.get("product_id"))
             amount = int(request.form.get("amount")) if "amount" in request.form else 1
 
             add_basket_item(request.form.get("product_id"),amount)
 
-        elif "place" in request.form:
+        if "place" in request.form:
             # Create a reservetion with current basket
             user = get_user()
             if not user:
@@ -138,6 +141,7 @@ def basket():
             "order_date_pickup": 0,
             "order_date_place": 0,
             "order_date_completed":0,
+            "order_placed": False,
             "products": basket
             }
             id = mongo.db.reservations.insert_one(reservation).inserted_id
@@ -145,11 +149,9 @@ def basket():
             flash("Your basket is now prepared for a collect")
             return redirect(url_for("reservation",reservation_id=id))
 
-        else:
-            # a post ation where the the button name is not defiened
-            pass
+    basket_total = inject_basket(basket)
 
-    return render_template("basket.html",page_title="Basket")
+    return render_template("basket.html",page_title="Basket",basket_total=basket_total)
 
 
 @app.route("/register", methods=["GET","POST"])
@@ -254,13 +256,13 @@ def me():
 
 @app.route("/me/reservation/")
 @app.route("/me/reservation/<reservation_id>",methods=['GET','POST'])
-@app.route("/me/reservation/<reservation_id>/<product_id>",methods=['POST'])
-def reservation(reservation_id=0,product_id=0):
+def reservation(reservation_id=0):
     """
     Render reservation for route "/reservation" and set page title
     """
 
     if request.method == "POST":
+
         # Delete button pressed
         if "delete" in request.form:
             date_completed = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)}).get("order_date_completed")
@@ -276,8 +278,8 @@ def reservation(reservation_id=0,product_id=0):
             return redirect(url_for("me"))
 
         if "place" in request.form:
-            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"order_date_place": datetime.today()}})
-
+            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"order_placed": True}})
+            flash("Click & Collect placed! Thank you!")
             return redirect(url_for("reservation",reservation_id=reservation_id))
 
         if "set" in request.form:
@@ -290,6 +292,7 @@ def reservation(reservation_id=0,product_id=0):
             return redirect(url_for("reservation",reservation_id=reservation_id))
 
         if "update" in request.form:
+            product_id = request.args.get('id')
             products = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)}).get("products")
             index = indexOf(products,"id",product_id)
             products[index]["amount"] = int(request.form.get("input"))
@@ -298,6 +301,7 @@ def reservation(reservation_id=0,product_id=0):
             return redirect(url_for("reservation",reservation_id=reservation_id))
 
         if "remove" in request.form:
+            product_id = request.args.get('id')
             products = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)}).get("products")
             index = indexOf(products,"id",product_id)
             products.pop(index)
@@ -603,9 +607,9 @@ def inject_basket():
 @app.context_processor
 def inject_year():
     """
-    inject current year
+    inject today year and today form datetime input
     """
-    return {"year": datetime.today().year}
+    return {"year": datetime.today().year,"now": datetime.today().strftime('%Y-%m-%dT%H:%M')}
 
 
 # All Local helpers
@@ -704,7 +708,6 @@ def indexOf(array,key,value):
 
 
 def getDateTime(timestamp):
-    print(20,timestamp)
     if (timestamp != 0):
         return timestamp.strftime('%Y-%m-%d %H:%M')
 
@@ -770,6 +773,19 @@ def inject_reservation(reservation):
     reservation["reservation_status"] = statuses[status]
 
     return reservation
+
+
+def inject_basket(basket):
+    """
+    injects calculations to basket items and returns the total
+    """
+    total = 0
+    for product in basket:
+         sum = int(product["amount"]) * float(product["price"])
+         product["sum"] = sum
+         total += sum
+
+    return total
 
 
 def confirm_admin():

@@ -11,13 +11,15 @@
               <tr>
                 <th scope="col">Product</th>
                 <th scope="col">Amount</th>
+                <th scope="col" class="text-end">Price</th>
+                <th scope="col" class="text-end">Total</th>
               </tr>
             </thead>
             <tbody>
               {% for product in basket %}
               <tr>
                 <td>
-                  <a href="{{ url_for('product',product_id=product.id) }}"
+                  <a href="{{url_for('product',product_id=product.id)}}"
                     >{{product.name}}</a
                   >
                 </td>
@@ -60,8 +62,15 @@
                     </div>
                   </form>
                 </td>
+                <td class="text-end">$ {{product.price}}</td>
+                <td class="text-end">$ {{product.sum}}</td>
               </tr>
               {% endfor %}
+              <tr>
+                <td colspan="4" class="text-end">
+                  <strong>Total: </strong>$ {{basket_total}}
+                </td>
+              </tr>
             </tbody>
           </table>
           {% else %}
@@ -74,7 +83,7 @@
           {% endif %}
         </div>
       </div>
-      {% if basket or user %}
+      {% if basket|length > 0 and user %}
       <div
         class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
       >
