@@ -1,9 +1,9 @@
 {% extends "admin/admin_base.html" %} {% block admin_base %}
-<h3>{{user.name}}</h3>
+<h3>{{edituser.name}}</h3>
 <form
-  id="form-{{user._id}}"
+  id="form-{{edituser._id}}"
   method="POST"
-  action="{{ url_for('admin_user',user_id=user._id) }}"
+  action="{{ url_for('admin_user',user_id=edituser._id) }}"
 >
   <table class="table table-sm table-dark">
     <tbody>
@@ -15,7 +15,7 @@
             type="input"
             id="name"
             name="name"
-            value="{{user.name}}"
+            value="{{edituser.name}}"
           />
         </td>
       </tr>
@@ -27,7 +27,7 @@
             type="email"
             id="email"
             name="email"
-            value="{{user.email}}"
+            value="{{edituser.email}}"
           />
         </td>
       </tr>
@@ -35,7 +35,8 @@
         <td scope="row" colspan="2">
           <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" id="isadmin"
-            name="isadmin" {% if user.isAdmin == True %}checked{% endif %} />
+            name="isadmin" {% if edituser.isAdmin == True %}checked{% endif %}
+            />
             <label class="form-check-label" for="isadmin">Administrator</label>
           </div>
         </td>

@@ -547,10 +547,10 @@ def admin_user(user_id=None):
             flash("User deleted")
             return redirect(url_for("admin_users"))
 
-    user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
-    if (not user): return redirect(url_for("admin_users"))
+    edituser = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+    if (not edituser): return redirect(url_for("admin_users"))
 
-    return render_template("admin/user.html",page_title=user["name"],user=user)
+    return render_template("admin/user.html",page_title=edituser["name"],edituser=edituser)
 
 
 # All Context Processors
