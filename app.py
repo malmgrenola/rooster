@@ -62,7 +62,8 @@ def products(category=None):
     category_id = category.get("_id")
     products = mongo.db.products.find({ "categories": { "$in": [category_id] } })
 
-    return render_template("products.html",page_title=category["name"], products=products,category=category)
+    return render_template(
+    "products.html",page_title=category["name"], products=products,category=category)
 
 
 @app.route("/product/<product_id>", methods=["GET", "POST"])
@@ -124,7 +125,8 @@ def basket():
             if not user:
                 flash("You must sign up or sig in before order can be placed")
                 return redirect(url_for("signin"))
-            user_id = mongo.db.users.find_one({ "email": { "$eq": user["email"] } }).get("_id")
+            user_id = mongo.db.users.find_one(
+            { "email": { "$eq": user["email"] } }).get("_id")
 
             reservation = {
             "client_id": user_id,
@@ -192,7 +194,8 @@ def signin():
     """
     if request.method == "POST":
         #Check if username already exists in db
-        existing_user = mongo.db.users.find_one({"email": request.form.get("email").lower()})
+        existing_user = mongo.db.users.find_one(
+        {"email": request.form.get("email").lower()})
 
         if existing_user:
             # ensure hashed password matches user input
@@ -256,7 +259,8 @@ def reservation(reservation_id=0):
 
         # Delete button pressed
         if "delete" in request.form:
-            order_placed = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)}).get("order_placed")
+            order_placed = mongo.db.reservations.find_one(
+            {"_id": ObjectId(reservation_id)}).get("order_placed")
             if order_placed:
                 flash("Can't delete collected order")
                 return redirect(url_for("reservation",reservation_id=reservation_id))
@@ -268,7 +272,8 @@ def reservation(reservation_id=0):
             return redirect(url_for("me"))
 
         if "place" in request.form:
-            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"order_placed": True}})
+            mongo.db.reservations.update_one(
+            {"_id": ObjectId(reservation_id)}, {"$set": {"order_placed": True}})
             flash("Click & Collect placed! Thank you!")
             return redirect(url_for("reservation",reservation_id=reservation_id))
 
@@ -277,25 +282,34 @@ def reservation(reservation_id=0):
                 flash("No valid date")
 
             d = datetime.strptime(request.form.get("pickup-date-time"), "%Y-%m-%dT%H:%M")
-            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"order_date_pickup": d}})
+            mongo.db.reservations.update_one(
+            {"_id": ObjectId(reservation_id)}, {"$set": {"order_date_pickup": d}})
+
             flash("Pickup date set")
             return redirect(url_for("reservation",reservation_id=reservation_id))
 
         if "update" in request.form:
             product_id = request.args.get('id')
-            products = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)}).get("products")
+            products = mongo.db.reservations.find_one(
+            {"_id": ObjectId(reservation_id)}).get("products")
             index = indexOf(products,"id",product_id)
             products[index]["amount"] = int(request.form.get("input"))
-            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
+            mongo.db.reservations.update_one(
+            {"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
+
             flash("product amount updated")
             return redirect(url_for("reservation",reservation_id=reservation_id))
 
         if "remove" in request.form:
             product_id = request.args.get('id')
-            products = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)}).get("products")
+            products = mongo.db.reservations.find_one(
+            {"_id": ObjectId(reservation_id)}).get("products")
+
             index = indexOf(products,"id",product_id)
             products.pop(index)
-            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
+            mongo.db.reservations.update_one(
+            {"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
+
             flash("product removed")
             return redirect(url_for("reservation",reservation_id=reservation_id))
 
@@ -303,7 +317,8 @@ def reservation(reservation_id=0):
 
     reservation = inject_reservation(reservation)
 
-    return render_template("me/reservation.html",page_title="My Reservation", reservation=reservation)
+    return render_template(
+    "me/reservation.html",page_title="My Reservation", reservation=reservation)
 
 
 @app.route("/logout")
@@ -353,7 +368,8 @@ def admin_collect():
         reservation["order_item_count"] = order_item_count
         reservation["order_date_pickup"] = getDateTime(reservation["order_date_pickup"])
 
-    return render_template("admin/collect.html",page_title="Click & Collect",reservations=reservations)
+    return render_template(
+    "admin/collect.html",page_title="Click & Collect",reservations=reservations)
 
 
 @app.route("/admin/collect/<reservation_id>", methods=['GET','POST'])
@@ -369,12 +385,19 @@ def admin_collect_details(reservation_id=None):
         if "save" in request.form:
 
             if (request.form.get("pickup-date-time") != ""):
-                d = datetime.strptime(request.form.get("pickup-date-time"), "%Y-%m-%dT%H:%M")
+                d = datetime.strptime(
+                request.form.get("pickup-date-time"), "%Y-%m-%dT%H:%M")
 
-            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"order_date_pickup": d, "order_comment": request.form.get("order_comment")}})
+            mongo.db.reservations.update_one(
+            {"_id": ObjectId(reservation_id)},
+            {"$set":
+            {"order_date_pickup": d,
+            "order_comment": request.form.get("order_comment")}
+            })
             flash("Changes saved")
 
-            return redirect(url_for("admin_collect_details",reservation_id=reservation_id))
+            return redirect(url_for(
+            "admin_collect_details",reservation_id=reservation_id))
 
         if "terminate" in request.form:
             mongo.db.reservations.delete_one({"_id": ObjectId(reservation_id)})
@@ -383,18 +406,24 @@ def admin_collect_details(reservation_id=None):
             return redirect(url_for("admin_collect"))
 
         product_id = request.args.get('product_id')
-        products = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)})["products"]
+        products = mongo.db.reservations.find_one(
+        {"_id": ObjectId(reservation_id)})["products"]
+
         index = indexOf(products,"id",product_id)
 
         if "delete" in request.form:
             products.pop(index)
-            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
+            mongo.db.reservations.update_one(
+            {"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
+
             flash("product removed")
 
         if "update" in request.form:
 
             products[index]["amount"] = request.form.get("input")
-            mongo.db.reservations.update_one({"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
+            mongo.db.reservations.update_one(
+            {"_id": ObjectId(reservation_id)}, {"$set": {"products": products}})
+
             flash("product amount updated")
 
         return redirect(url_for("admin_collect_details",reservation_id=reservation_id))
@@ -403,9 +432,11 @@ def admin_collect_details(reservation_id=None):
     details = mongo.db.reservations.find_one({"_id": ObjectId(reservation_id)})
 
     if (details["order_date_pickup"]!= 0):
-        details["order_date_pickup_datetime"] = datetime.strftime(details["order_date_pickup"], '%Y-%m-%dT%H:%M')
+        details["order_date_pickup_datetime"] = datetime.strftime(
+        details["order_date_pickup"], '%Y-%m-%dT%H:%M')
 
-    return render_template("admin/collect_details.html",page_title="Reservation details",details=details)
+    return render_template(
+    "admin/collect_details.html",page_title="Reservation details",details=details)
 
 
 @app.route("/admin/categories")
@@ -433,7 +464,9 @@ def admin_category(category_id=None):
         if "save" in request.form:
             data = {}
             data["name"] = request.form.get("category_name")
-            mongo.db.categories.update_one({"_id": ObjectId(category_id)}, {"$set": data})
+            mongo.db.categories.update_one(
+            {"_id": ObjectId(category_id)}, {"$set": data})
+
             flash("Category details saved")
             return redirect(url_for("admin_categories"))
 
@@ -450,7 +483,8 @@ def admin_category(category_id=None):
 
     category = mongo.db.categories.find_one({"_id": ObjectId(category_id)})
 
-    return render_template("admin/category.html",page_title="Category",category=category)
+    return render_template(
+    "admin/category.html",page_title="Category",category=category)
 
 
 @app.route("/admin/products")
@@ -466,15 +500,18 @@ def admin_products():
 
     for product in products:
         for category in product["categories"]:
-            product["categories"] = mongo.db.categories.find_one({"_id": ObjectId(category)})
+            product["categories"] = mongo.db.categories.find_one(
+            {"_id": ObjectId(category)})
 
-    return render_template("admin/products.html",page_title="Products",products=products)
+    return render_template(
+    "admin/products.html",page_title="Products",products=products)
 
 
 @app.route("/admin/product/<product_id>", methods=['GET','POST'])
 def admin_product(product_id=None):
     """
-    Render admin product from id for route "/admin/product/product_id and set page title
+    Render admin product from id for route "/admin/product/product_id
+    set page title
     handles post actions
     """
     if not confirm_admin(): return redirect(url_for('logout'))
@@ -488,7 +525,9 @@ def admin_product(product_id=None):
             data["price"] = float(request.form.get("price"))
             data["categories"] = [ObjectId(request.form.get("category"))]
 
-            mongo.db.products.update_one({"_id": ObjectId(product_id)}, {"$set": data})
+            mongo.db.products.update_one(
+            {"_id": ObjectId(product_id)}, {"$set": data})
+
             flash("Product details saved")
 
             return redirect(url_for("admin_product",product_id=product_id))
@@ -501,7 +540,11 @@ def admin_product(product_id=None):
         if "upload" in request.form:
             filename = handleUpload(request)
             if filename != "":
-                mongo.db.products.update_one({"_id": ObjectId(product_id)}, {"$set": {"image_url": "https://d1o374on78xxxv.cloudfront.net/media/"+filename}})
+                mongo.db.products.update_one(
+                {"_id": ObjectId(product_id)},
+                {"$set":
+                {"image_url": "https://d1o374on78xxxv.cloudfront.net/media/"+filename}})
+
                 return redirect(url_for("admin_product",product_id=product_id))
 
     if product_id == "new":
@@ -518,11 +561,11 @@ def admin_product(product_id=None):
 
     if "categories" in product:
         for category in product["categories"]:
-            product["categories"] = mongo.db.categories.find_one({"_id": ObjectId(category)})
+            product["categories"] = mongo.db.categories.find_one(
+            {"_id": ObjectId(category)})
 
-
-
-    return render_template("admin/product.html",page_title=product["name"],product=product)
+    return render_template(
+    "admin/product.html",page_title=product["name"],product=product)
 
 
 @app.route("/admin/users")
@@ -563,7 +606,8 @@ def admin_user(user_id=None):
     edituser = mongo.db.users.find_one({"_id": ObjectId(user_id)})
     if (not edituser): return redirect(url_for("admin_users"))
 
-    return render_template("admin/user.html",page_title=edituser["name"],edituser=edituser)
+    return render_template(
+    "admin/user.html",page_title=edituser["name"],edituser=edituser)
 
 
 # All Context Processors
@@ -603,7 +647,8 @@ def inject_year():
     """
     inject today year and today form datetime input
     """
-    return {"year": datetime.today().year,"now": datetime.today().strftime('%Y-%m-%dT%H:%M')}
+    return {"year": datetime.today().year,
+    "now": datetime.today().strftime('%Y-%m-%dT%H:%M')}
 
 
 # All Local helpers
@@ -693,7 +738,8 @@ def storeBasket():
     user = get_user()
 
     if "email" in user:
-        mongo.db.users.update_one({"email": user["email"]}, {"$set": {"basket": session["basket"]}})
+        mongo.db.users.update_one(
+        {"email": user["email"]}, {"$set": {"basket": session["basket"]}})
 
 
 def indexOf(array,key,value):
@@ -746,7 +792,8 @@ def get_reservations():
     injects reservation calculations and current reservation status
     """
     user = get_user()
-    reservations = list(mongo.db.reservations.find(filter={"client_email": user["email"]},sort=[( "order_date_pickup", -1 )]))
+    reservations = list(mongo.db.reservations.find(
+    filter={"client_email": user["email"]},sort=[( "order_date_pickup", -1 )]))
 
     # inject calculations & status
     for reservation in reservations:
