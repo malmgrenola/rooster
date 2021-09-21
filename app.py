@@ -97,6 +97,7 @@ def basket():
             basket.pop(index)
             session["basket"] = basket
             storeBasket()
+            flash("Item deleted")
 
         if "update" in request.form:
             # update amount manually
@@ -107,12 +108,15 @@ def basket():
                     basket[index]["amount"] = newValue
                     session["basket"] = basket
                     storeBasket()
+                    flash("Your basket is updated")
+
 
         if "add" in request.form:
             product = get_basket_item(request.form.get("product_id"))
             amount = int(request.form.get("amount")) if "amount" in request.form else 1
 
             add_basket_item(request.form.get("product_id"),amount)
+
 
         if "place" in request.form:
             # Create a reservation with current basket
