@@ -408,7 +408,7 @@ CSS files passed the test. Note that there are Bootstrap warnings.
 
 ## Deployment
 
-Site is deployed to https://purple-rooster.herokuapp.com/ using [Heruko](https://www.heroku.com/).
+Site is deployed to https://purple-rooster.herokuapp.com/ using [Heroku](https://www.heroku.com/).
 
 Heroku is connected to the Github repository with automatic deployment from the branch `main`.
 Every push or merge to main will trigger a new deployment.
