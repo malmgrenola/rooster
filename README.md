@@ -392,6 +392,7 @@ CSS files passed the test. Note that there are Bootstrap warnings.
 
 1. When clicking the navbar and a new route is made, style is flickering before landing on the correct style.
 2. Admin section products table is wider than the width of most small screens portrait mode.
+3. Some tables uses [table-responsive](https://getbootstrap.com/docs/4.0/content/tables/#responsive-tables) where user would have to scroll sideways where table columns won't fit.
 
 ## Deployment
 

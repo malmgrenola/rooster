@@ -8,82 +8,84 @@
     <div class="row justify-content-center">
       <div class="col mb-5 mb-5 mt-5">
         {% if basket %}
-        <table class="table table-sm table-dark">
-          <thead>
-            <tr>
-              <th scope="col">thumbnail</th>
-              <th scope="col">Product</th>
-              <th scope="col">Amount</th>
-              <th scope="col" class="text-end">Price</th>
-              <th scope="col" class="text-end">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for product in basket %}
+        <div class="table-responsive">
+          <table class="table table-sm table-dark">
+            <thead>
+              <tr>
+                <th scope="col">thumbnail</th>
+                <th scope="col">Product</th>
+                <th scope="col">Amount</th>
+                <th scope="col" class="text-end">Price</th>
+                <th scope="col" class="text-end">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in basket %}
 
-            <tr class="align-middle">
-              <td>
-                <img
-                  src="{{product.image_url}}"
-                  alt="{{product.name}} image"
-                  class="img-thumbnail"
-                />
-              </td>
-              <td>
-                <a href="{{url_for('product',product_id=product.id)}}"
-                  >{{product.name}}</a
-                >
-              </td>
-              <td>
-                <form
-                  id="form-{{product.id}}"
-                  method="POST"
-                  action="{{ url_for('basket') }}"
-                >
-                  <div class="input-group">
-                    <input
-                      id="amount-{{product.id}}"
-                      name="input"
-                      type="number"
-                      min="1"
-                      max="30"
-                      class="form-control basket-on-enter"
-                      placeholder="0"
-                      aria-label="amount"
-                      value="{{product.amount}}"
-                    />
-                    <button
-                      id="update-{{product.id}}"
-                      name="update"
-                      value="{{product.id}}"
-                      class="btn btn-outline-light basket-update"
-                      type="submit"
-                    >
-                      update
-                    </button>
-                    <button
-                      id="del-{{product.id}}"
-                      name="delete"
-                      value="{{product.id}}"
-                      class="btn btn-outline-light"
-                      type="submit"
-                    >
-                      <i class="bi bi-trash-fill"></i>
-                    </button>
-                  </div>
-                </form>
-              </td>
-              <td class="text-end">$ {{product.price}}</td>
-              <td class="text-end">$ {{product.sum}}</td>
-            </tr>
-            {% endfor %}
-            <tr>
-              <td colspan="5" class="text-end">
-                <strong>Total: </strong>$ {{basket_total}}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              <tr class="align-middle">
+                <td>
+                  <img
+                    src="{{product.image_url}}"
+                    alt="{{product.name}} image"
+                    class="img-thumbnail"
+                  />
+                </td>
+                <td>
+                  <a href="{{url_for('product',product_id=product.id)}}"
+                    >{{product.name}}</a
+                  >
+                </td>
+                <td>
+                  <form
+                    id="form-{{product.id}}"
+                    method="POST"
+                    action="{{ url_for('basket') }}"
+                  >
+                    <div class="input-group">
+                      <input
+                        id="amount-{{product.id}}"
+                        name="input"
+                        type="number"
+                        min="1"
+                        max="30"
+                        class="form-control basket-on-enter"
+                        placeholder="0"
+                        aria-label="amount"
+                        value="{{product.amount}}"
+                      />
+                      <button
+                        id="update-{{product.id}}"
+                        name="update"
+                        value="{{product.id}}"
+                        class="btn btn-outline-light basket-update"
+                        type="submit"
+                      >
+                        update
+                      </button>
+                      <button
+                        id="del-{{product.id}}"
+                        name="delete"
+                        value="{{product.id}}"
+                        class="btn btn-outline-light"
+                        type="submit"
+                      >
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
+                    </div>
+                  </form>
+                </td>
+                <td class="text-end">$ {{product.price}}</td>
+                <td class="text-end">$ {{product.sum}}</td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td colspan="5" class="text-end">
+                  <strong>Total: </strong>$ {{basket_total}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         {% else %}
         <p>Your basket is empty!</p>
         {% endif %}
