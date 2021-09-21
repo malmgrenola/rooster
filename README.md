@@ -431,6 +431,7 @@ The photos used in this site were obtained from:
   - Modified with [Adobe Photoshop](https://www.adobe.com/products/photoshop.html)
 - [testproduct.jpeg](https://purple-rooster.herokuapp.com/static/assets/testproduct.jpg)
   - Produced with [Adobe Photoshop](https://www.adobe.com/products/photoshop.html)
+- Live site screenshot is created by [responsive design](http://ami.responsivedesign.is/)
 
 ### Acknowledgements
 
