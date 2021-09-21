@@ -427,8 +427,12 @@ The template shop-homepage used on this site is from [Start Bootstrap](https://s
 The photos used in this site were obtained from:
 
 - [daylesford.com](https://www.daylesford.com/online-shop/)
-- [background](#)
-- [rooster in logo](#)
+- [background](https://www.rawpixel.com/image/578551/brown-wood-texture-high-resolution-image)
+  - Modified with [Adobe Photoshop](https://www.adobe.com/products/photoshop.html)
+- [rooster in logo](https://www.rawpixel.com/image/2603952/free-illustration-png-chicken-rooster-cock)
+  - Modified with [Adobe Photoshop](https://www.adobe.com/products/photoshop.html)
+- [testproduct.jpeg](https://purple-rooster.herokuapp.com/static/assets/testproduct.jpg)
+  - Produced with [Adobe Photoshop](https://www.adobe.com/products/photoshop.html)
 
 ### Acknowledgements
 
