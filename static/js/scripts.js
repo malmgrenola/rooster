@@ -1,9 +1,16 @@
 $(document).ready(function() {
   // Handle active state navbar
-  const firstPath = window.location.pathname.split("/")[1];
+  const paths = window.location.pathname.split("/");
+  const firstPath = paths[1];
 
   if (firstPath === "admin") {
     $(`.nav-link[href="/admin"]`).addClass("active");
+
+    // Handle Admin navbar button states
+    $(`.nav-admin[href="/${paths[1]}/${paths[2]}"]`)
+      .addClass("btn-light")
+      .removeClass("btn-outline-light");
+
     return;
   }
 

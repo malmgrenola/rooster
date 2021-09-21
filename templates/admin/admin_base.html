@@ -9,7 +9,10 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-12 col-lg-2">{% include 'admin/navbar.html' %}</div>
+          <div class="col-12 col-lg-2">
+            <h3>Navigation</h3>
+            {% include 'admin/navbar.html' %}
+          </div>
           <div class="col-12 col-lg-10">
             {% block admin_base %} {% endblock %}
           </div>
