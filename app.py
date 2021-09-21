@@ -202,7 +202,7 @@ def signin():
                         session["user"] = request.form.get("email").lower()
                         if "basket" in existing_user:
                             session["basket"] = existing_user["basket"]
-                        flash("Welcome, {}".format(existing_user["name"]))
+                        flash("Signed in as {}".format(existing_user["name"]))
                         return redirect(url_for("me"))
             else:
                 # invalid password match
