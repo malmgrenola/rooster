@@ -52,11 +52,8 @@ Site wireframes:
 
 - [Front page](wireframes/front.png) search meal page, showing search results. Also acts as site index page
 - [Product detail page](wireframes/product.png) displays product details.
-- [basket page](wireframes/reservation.png) displays selected items prepared for reservation.
-- [user page](wireframes/user.png) displays user details including clicks and collects.
-- [Sign in Page](wireframes/signin.png) ability to sign in to the site.
-- [Admin click and collects page](wireframes/list-reservations.png) list all users reservations for admin purposes
-- [Admin list users page](wireframes/list-users.png) list all users for admin purposes
+- [basket page](wireframes/basket.png) displays selected items prepared for reservation.
+- [admin page](wireframes/admin.png) displays user details including clicks and collects.
 
 ## Features
 
