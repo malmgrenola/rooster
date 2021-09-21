@@ -214,9 +214,9 @@ Site is tested on the following platforms and browsers
   - Edge (93.0.961.52)
   - Firefox (92.0)
 - Iphone 12
-  - Safari
-  - Google Chrome
-- Android Samsung S12
+  - Safari (latest)
+  - Google Chrome (latest)
+- Samsung Galaxy S10
   - Google Chrome
 
 All tests pass on all platforms.
@@ -349,7 +349,7 @@ The feature handles errors & success in the UI.
    6. Select category `Meat`
    7. Press `Save`
    8. Download sample image to your local desktop from https://purple-rooster.herokuapp.com/static/assets/testproduct.jpg
-   9. click choose file and select the sample image from your local desktop
+   9. click choose file and select the sample image from your local desktop or image library on mobile device.
    10. Press upload and confirm `file uploaded` message
    11. In the top navbar click `Meat section` and confirm `Test product` is there.
    12. Go back to https://purple-rooster.herokuapp.com/admin/products and click on test product
