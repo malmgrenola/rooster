@@ -70,7 +70,6 @@ My page _(only signed in users)_
 Admin _(only signed in admins)_
 
 Each page includes a footer element containing copyright information about the site.
-[Footer wireframe example](wireframes/footer.png)
 
 ### Existing Features
 
@@ -176,7 +175,8 @@ The site color scheme is wooden and high contrast, with user information text an
 
 ### Features Left to Implement
 
-- ...
+- Restore password flow
+- Send click and collects as email
 
 ## Technologies Used
 
