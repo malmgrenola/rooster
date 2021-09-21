@@ -206,13 +206,13 @@ In this section, all of the languages, frameworks, libraries, and any other tool
 Site is tested on the following platforms and browsers
 
 - Mac
-  - Google Chrome (91.0.4472.106)
-  - Safari (14.1.1)
-  - Firefox (89.0.1)
+  - Google Chrome (93.0.4577.82)
+  - Safari (14.1.2)
+  - Firefox (92.0)
 - Windows 10
-  - Google Chrome (91.0.4472.114)
-  - Edge (91.0.864.53)
-  - Firefox (89.0.1)
+  - Google Chrome (93.0.4577.82)
+  - Edge (93.0.961.52)
+  - Firefox (92.0)
 - Iphone 12
   - Safari
   - Google Chrome
@@ -220,6 +220,17 @@ Site is tested on the following platforms and browsers
   - Google Chrome
 
 All tests pass on all platforms.
+
+### Test site
+
+#### Basic navigation
+
+1. feature test:
+   1. Goto `https://purple-rooster.herokuapp.com/`
+   2. click items in navbar
+   3. confirm navbar active state and general look.
+
+Feature passed this test
 
 ### Test users
 
@@ -238,7 +249,7 @@ Feature passed this test
 #### Test sign up
 
 1. feature test:
-   1. When signed out, Go to http://purple-rooster.herokuapp.com/register
+   1. When signed out, Go to https://purple-rooster.herokuapp.com/register
    2. register with name `My name` and email `user@rooster.com` use any password
    3. confirm username already exists message
    4. register with name `Your Name` and email `anythingrandom@rooster.com` use password `123456`
@@ -251,7 +262,7 @@ Feature passed this test
 #### Test sign out
 
 1. feature test:
-   1. When signed in, Go to http://purple-rooster.herokuapp.com/me/overview
+   1. When signed in, Go to https://purple-rooster.herokuapp.com/me/overview
    2. click `sign out` next to username in header
    3. confirm you are signed out and redirected to sign in page
 
@@ -282,7 +293,7 @@ Feature passed this test
 
 1. feature test:
    1. with items in basket
-   2. go to http://purple-rooster.herokuapp.com/basket
+   2. go to https://purple-rooster.herokuapp.com/basket
    3. click `Click and Collect` button in the bottom of the form
    4. select Select your prefered pickup date in the date time field and press `set pickup date button`
    5. modify your items and confirm functions update and remove
@@ -303,7 +314,7 @@ The feature handles errors & success in the UI.
 
 1. feature test:
    1. When signed out, Sign in as `admin@rooster.com` and password `123456`
-   2. In the navbar click the toolbox (http://purple-rooster.herokuapp.com/admin/collect)
+   2. In the navbar click the toolbox (https://purple-rooster.herokuapp.com/admin/collect)
    3. Click on any sample Click & Collect made to open up details
    4. confirm pickup date, comment and items row can update on request using `Save changes`
    5. confirm a sample click and collect can be deleted by clicking `delete`
@@ -341,7 +352,7 @@ The feature handles errors & success in the UI.
    9. click choose file and select the sample image from your local desktop
    10. Press upload and confirm `file uploaded` message
    11. In the top navbar click `Meat section` and confirm `Test product` is there.
-   12. Go back to http://purple-rooster.herokuapp.com/admin/products and click on test product
+   12. Go back to https://purple-rooster.herokuapp.com/admin/products and click on test product
    13. Press `Delete product` and confirm the product is deleted in the list.
 
 Feature passed this test
@@ -391,8 +402,9 @@ CSS files passed the test. Note that there are Bootstrap warnings.
 ### Known issues
 
 1. When clicking the navbar and a new route is made, style is flickering before landing on the correct style.
-2. Admin section products table is wider than the width of most small screens portrait mode.
-3. Some tables uses [table-responsive](https://getbootstrap.com/docs/4.0/content/tables/#responsive-tables) where user would have to scroll sideways where table columns won't fit.
+2. Some tables uses [table-responsive](https://getbootstrap.com/docs/4.0/content/tables/#responsive-tables) where user would have to scroll sideways where table columns won't fit.
+3. The template shop-homepage used has CSS warnings when running CSS validator.
+4. datetime fields in Firefox is not popups and date and time must be specified manually
 
 ## Deployment
 
@@ -435,7 +447,8 @@ The photos used in this site were obtained from:
 
 ### Acknowledgements
 
-- I received inspiration from [code institute](https://codeinstitute.net/)
-- https://www.chromium.org/developers/design-documents/create-amazing-password-forms
-- https://farmorslycka.se/en/farmshop/
-- https://www.beckettsfarm.co.uk/farm-shop/click-and-collect/
+- I received inspiration from [code institute](https://codeinstitute.net/) using sign in and register feature (and general knowledge)
+- I received inspiration from [create-amazing-password-forms](https://www.chromium.org/developers/design-documents/create-amazing-password-forms)
+- I received inspiration from [farmorslycka](https://farmorslycka.se/en/farmshop/)
+- I received inspiration from [beckettsfarm](https://www.beckettsfarm.co.uk/farm-shop/click-and-collect/)
+- I received inspiration from [stackoverflow](https://stackoverflow.com/a/65396215/600886) for fixing background image on ios.

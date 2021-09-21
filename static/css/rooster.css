@@ -3,6 +3,18 @@ body {
   background-size: cover;
 }
 
+@supports (-webkit-touch-callout: none) {
+  body {
+    background-attachment: scroll;
+  }
+}
+
+@supports not (-webkit-touch-callout: none) {
+  body {
+    background-attachment: fixed;
+  }
+}
+
 .main {
   min-height: calc(100vh - 278px);
 }
