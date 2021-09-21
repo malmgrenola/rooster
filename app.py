@@ -334,17 +334,6 @@ def logout():
 
 
 # All Administrator Helpers
-@app.route("/admin")
-def admin():
-    """
-    Admin area, redirects to admin_collect by default
-    """
-
-    if not confirm_admin(): return redirect(url_for('logout'))
-
-    return redirect(url_for("admin_collect"))
-
-
 @app.route("/admin/collect")
 def admin_collect():
     """

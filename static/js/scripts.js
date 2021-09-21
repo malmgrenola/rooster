@@ -4,7 +4,7 @@ $(document).ready(function() {
   const firstPath = paths[1];
 
   if (firstPath === "admin") {
-    $(`.nav-link[href="/admin"]`).addClass("active");
+    $(`.nav-link[href="/admin/collect"]`).addClass("active");
 
     // Handle Admin navbar button states
     $(`.nav-admin[href="/${paths[1]}/${paths[2]}"]`)
